@@ -516,8 +516,127 @@ function closeWishModal() {
 
 // ESC tugmasi bilan yopish
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeWishModal();
+  if (e.key === 'Escape') {
+    closeWishModal();
+    closePaymentModal();
+  }
 });
+
+// --- 3.1. VISA PAYMENT & SCREENSHOT UPLOAD LOGIC ($29.99) ---
+function openPaymentModal() {
+  const modal = document.getElementById('payment-modal');
+  const form = document.getElementById('visa-payment-form');
+  const successBox = document.getElementById('payment-success-box');
+
+  if (form) form.classList.remove('hidden');
+  if (successBox) successBox.classList.add('hidden');
+
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  initCreditCardLiveInput();
+}
+
+function closePaymentModal() {
+  const modal = document.getElementById('payment-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+  document.body.style.overflow = 'auto';
+}
+
+// Karta ma'lumotlarini jonli formatlash va prevyuda ko'rsatish
+function initCreditCardLiveInput() {
+  const numInput = document.getElementById('pay-card-number');
+  const expInput = document.getElementById('pay-card-expiry');
+  const holderInput = document.getElementById('pay-card-holder');
+
+  const prevNum = document.getElementById('card-preview-number');
+  const prevExp = document.getElementById('card-preview-expiry');
+  const prevHolder = document.getElementById('card-preview-holder');
+
+  if (!numInput || numInput.dataset.listenerAdded) return;
+  numInput.dataset.listenerAdded = 'true';
+
+  // Karta raqami: 16 ta raqam, har 4 tasida bo'shliq
+  numInput.addEventListener('input', (e) => {
+    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+    e.target.value = formatted;
+    prevNum.innerText = formatted || '•••• •••• •••• ••••';
+  });
+
+  // Muddat: MM/YY
+  expInput.addEventListener('input', (e) => {
+    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+    if (val.length >= 3) {
+      val = val.substring(0, 2) + '/' + val.substring(2, 4);
+    }
+    e.target.value = val;
+    prevExp.innerText = val || 'MM/YY';
+  });
+
+  // Karta egasi
+  holderInput.addEventListener('input', (e) => {
+    let val = e.target.value.toUpperCase();
+    e.target.value = val;
+    prevHolder.innerText = val || 'ISMI SHARIFI';
+  });
+}
+
+// Skrinshot yuklanganda rasm prevyusini ko'rsatish
+function handleScreenshotUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const previewImg = document.getElementById('screenshot-preview-img');
+    const previewContainer = document.getElementById('screenshot-preview-container');
+    const uploadPrompt = document.getElementById('screenshot-upload-prompt');
+    const fileName = document.getElementById('screenshot-filename');
+
+    if (previewImg && previewContainer) {
+      previewImg.src = e.target.result;
+      if (fileName) fileName.innerText = `${file.name} (${Math.round(file.size / 1024)} KB)`;
+      previewContainer.classList.remove('hidden');
+      if (uploadPrompt) uploadPrompt.classList.add('hidden');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// To'lovni tasdiqlash
+function submitVisaPayment(event) {
+  event.preventDefault();
+
+  const btn = document.getElementById('btn-submit-payment');
+  const originalText = btn.innerHTML;
+
+  btn.innerHTML = `<span>⏳</span><span>To'lov Tasdiqlanmoqda...</span>`;
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const form = document.getElementById('visa-payment-form');
+    const successBox = document.getElementById('payment-success-box');
+    const orderIdSpan = document.getElementById('success-order-id');
+
+    if (orderIdSpan) {
+      orderIdSpan.innerText = `VIP-${Math.floor(Math.random() * 90000 + 10000)}`;
+    }
+
+    if (form) form.classList.add('hidden');
+    if (successBox) successBox.classList.remove('hidden');
+
+    launchGrandFireworks();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }, 1200);
+}
 
 // --- 4. YOUTUBE MUSIC CONTROLS ---
 function toggleYouTubeMusic() {

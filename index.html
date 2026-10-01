@@ -118,6 +118,47 @@
     </main>
 
 
+    <!-- VIP SECTION: MAXSUS ATALGAN TABRIK ($29.99) -->
+    <section class="max-w-5xl mx-auto px-4 py-12">
+      <div class="vip-special-box p-8 sm:p-12 rounded-3xl text-center relative overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-72 h-72 bg-yellow-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-yellow-500/60 bg-yellow-500/20 text-yellow-300 text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-6">
+          <span>👑</span> EKSKLYUZIV VIP XIZMAT <span>👑</span>
+        </div>
+
+        <h2 class="text-3xl sm:text-5xl font-black font-serif text-white mb-4">
+          Maxsus Atalgan <span class="gold-text">Tabrik</span>
+        </h2>
+
+        <p class="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed mb-6 font-light">
+          Aynan sizning ustozingiz uchun, uning ismi-sharifi, saboqlari va shogirdlik xotiralari asosida professional shoirlar va qalamkashlar tomonidan yaratiladigan <strong class="text-yellow-400">eksklyuziv shaxsiy bayram tabriknomasi</strong>.
+        </p>
+
+        <!-- Price Display -->
+        <div class="inline-flex items-baseline gap-2 bg-black/60 border border-yellow-500/50 px-8 py-4 rounded-2xl mb-8 shadow-2xl">
+          <span class="text-xs uppercase tracking-wider text-gray-400 font-semibold">Xizmat narxi:</span>
+          <span class="text-4xl sm:text-5xl font-black gold-text font-serif">$29.99</span>
+          <span class="text-xs text-yellow-300/80 font-bold uppercase">USD</span>
+        </div>
+
+        <!-- Order Button -->
+        <div>
+          <button onclick="openPaymentModal()" class="glow-btn px-8 sm:px-12 py-4 sm:py-5 rounded-full gold-gradient-bg text-black font-black text-lg sm:text-xl shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-3 mx-auto">
+            <span>💳</span>
+            <span>Viza Karta Orqali To'lash ($29.99)</span>
+          </button>
+          <p class="text-xs text-gray-400 mt-3 flex items-center justify-center gap-2">
+            <span>🔒 Xavfsiz Viza / Mastercard to'lovi</span>
+            <span>•</span>
+            <span>📸 Skrinshot yuklash imkoni</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+
     <!-- FOOTER -->
     <footer class="border-t border-yellow-500/20 py-12 text-center text-gray-400 text-xs sm:text-sm mt-16">
       <div class="max-w-4xl mx-auto px-4">
@@ -148,6 +189,171 @@
 
       <div id="modal-wish-content">
         <!-- Dinamik kontent: Fan tilaklari va "Yana bitta tilak o'qish (Ustiga bosing)" -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: VIZA KARTA TO'LOVI VA SKRINSHOT YUKLASH ($29.99) -->
+  <div id="payment-modal" class="fixed inset-0 z-[250] hidden items-center justify-center modal-backdrop p-4 overflow-y-auto">
+    <div class="relative w-full max-w-2xl my-8">
+      
+      <!-- ULTRA-VISIBLE 'X' CLOSE BUTTON -->
+      <button onclick="closePaymentModal()" class="modal-close-btn" aria-label="Yopish">
+        ✕
+      </button>
+
+      <div class="certificate-frame">
+        <div class="corner-ornament corner-tl"></div>
+        <div class="corner-ornament corner-tr"></div>
+        <div class="corner-ornament corner-bl"></div>
+        <div class="corner-ornament corner-br"></div>
+
+        <!-- Header -->
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-xs font-bold uppercase tracking-wider mb-2">
+            <span>💳</span> Viza Karta Kiriting ($29.99)
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black font-serif gold-text">
+            Maxsus Atalgan Tabrikka Buyurtma
+          </h2>
+          <p class="text-xs text-gray-300 mt-1 font-light">
+            Viza kartangiz ma'lumotlarini kiriting va to'lov skrinshotini biriktiring:
+          </p>
+        </div>
+
+        <!-- Form content -->
+        <form id="visa-payment-form" onsubmit="submitVisaPayment(event)" class="space-y-4 text-left">
+          
+          <!-- Virtual Visa Card Preview -->
+          <div class="credit-card-preview p-5 text-white mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs tracking-widest text-yellow-300 font-semibold uppercase">PREMIUM VIP CARD</span>
+              <span class="text-2xl font-black italic tracking-wider text-blue-400">VISA</span>
+            </div>
+            <div class="w-10 h-7 rounded bg-amber-400/80 mb-3 border border-yellow-200 flex items-center justify-center text-[10px] text-black font-mono font-bold">
+              CHIP
+            </div>
+            <div id="card-preview-number" class="text-lg sm:text-xl font-mono tracking-widest text-yellow-100 mb-3">
+              •••• •••• •••• ••••
+            </div>
+            <div class="flex justify-between items-end text-xs">
+              <div>
+                <span class="text-[9px] uppercase text-gray-400 block font-semibold">Karta Egasi:</span>
+                <span id="card-preview-holder" class="font-mono uppercase text-gray-200 font-bold tracking-wider">
+                  ISMI SHARIFI
+                </span>
+              </div>
+              <div class="text-right">
+                <span class="text-[9px] uppercase text-gray-400 block font-semibold">Muddat:</span>
+                <span id="card-preview-expiry" class="font-mono text-gray-200 font-bold">
+                  MM/YY
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Details Input Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                Viza Karta Raqami (16 ta raqam):
+              </label>
+              <input type="text" id="pay-card-number" required maxlength="19" placeholder="4000 1234 5678 9010" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                Amal Qilish Muddati (MM/YY):
+              </label>
+              <input type="text" id="pay-card-expiry" required maxlength="5" placeholder="12/28" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                CVV / CVC (3 xonali):
+              </label>
+              <input type="password" id="pay-card-cvv" required maxlength="3" placeholder="•••" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                Karta Egasining To'liq Ismi:
+              </label>
+              <input type="text" id="pay-card-holder" required placeholder="Masalan: ALIBEK RAHMATULLAYEV" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white uppercase placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+          </div>
+
+          <!-- Ustoz haqida ma'lumotlar -->
+          <div class="pt-2 border-t border-white/10 space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                Ustozingizning To'liq Ismi va Fani:
+              </label>
+              <input type="text" id="pay-teacher-info" required placeholder="Masalan: Maftuna Karimova, Matematika fani" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                Natijani olish uchun Telegram username yoki Telefon:
+              </label>
+              <input type="text" id="pay-contact-info" required placeholder="@telegram_username yoki +998901234567" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <!-- Screenshot yuklash qismi -->
+            <div>
+              <label class="block text-xs font-semibold text-yellow-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <span>📸</span> To'lov yoki Karta Skrinshotini Yuklang:
+              </label>
+              <div class="border-2 border-dashed border-yellow-500/40 rounded-xl p-4 text-center bg-black/40 hover:border-yellow-400 transition-colors cursor-pointer relative">
+                <input type="file" id="pay-screenshot-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" onchange="handleScreenshotUpload(event)">
+                <div id="screenshot-upload-prompt" class="space-y-1">
+                  <div class="text-3xl">📤</div>
+                  <p class="text-xs text-yellow-300 font-semibold">Skrinshotni tanlang yoki shu yerga tashlang</p>
+                  <p class="text-[10px] text-gray-400">PNG, JPG, JPEG formatda rasm</p>
+                </div>
+                <!-- Preview konteyneri -->
+                <div id="screenshot-preview-container" class="hidden mt-2 flex flex-col items-center">
+                  <img id="screenshot-preview-img" src="" alt="Screenshot preview" class="max-h-36 rounded-lg border border-yellow-500/50 shadow-md">
+                  <span id="screenshot-filename" class="text-[11px] text-yellow-300 mt-1 font-mono"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <button type="submit" id="btn-submit-payment" class="w-full py-4 rounded-xl gold-gradient-bg text-black font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-2xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer glow-btn">
+              <span>💳</span>
+              <span>To'lovni Tasdiqlash ($29.99)</span>
+            </button>
+            <p class="text-center text-[10px] text-gray-400 mt-2">
+              To'lov tasdiqlangach, maxsus atalgan tabrik 15 daqiqa ichida Telegramingizga yuboriladi.
+            </p>
+          </div>
+        </form>
+
+        <!-- Success Notification View (Hidden by default) -->
+        <div id="payment-success-box" class="hidden text-center py-8 space-y-4">
+          <div class="text-6xl animate-bounce">🎉</div>
+          <h3 class="text-2xl sm:text-3xl font-bold font-serif gold-text">
+            To'lov Muvaffaqiyatli Qabul Qilindi!
+          </h3>
+          <p class="text-sm text-gray-200 max-w-md mx-auto leading-relaxed">
+            Muhtaram buyurtmachi, sizning Viza karta to'lovingiz va skrinshotingiz tizimga qabul qilindi.
+          </p>
+          <div class="bg-black/50 border border-yellow-500/30 rounded-xl p-4 max-w-sm mx-auto font-mono text-xs text-yellow-300">
+            <div>Buyurtma ID: <span id="success-order-id">VIP-83921</span></div>
+            <div>Holati: <span class="text-green-400 font-bold">To'landi ($29.99)</span></div>
+          </div>
+          <p class="text-xs text-gray-400">
+            Professional qalamkashlarimiz ustozingiz uchun eksklyuziv tabrikni tayyorlab, ko'rsatilgan Telegram hisobingizga tez fursatda yuborishadi.
+          </p>
+          <button onclick="closePaymentModal()" class="px-8 py-3 rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-sm transition-all">
+            Tushundim, Rahmat!
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
