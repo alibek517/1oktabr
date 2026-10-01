@@ -365,15 +365,15 @@ function getSelectedSubjectsWish() {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// --- 3. GLOBAL STATE & INITIALIZATION ---
+/// --- 3. GLOBAL STATE & INITIALIZATION ---
 const selectedSubjects = new Set(); // Multi-select to'plami
-let isAudioPlaying = true;
+let isAudioPlaying = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   initThreeJS();
   initClickFireworks();
   
-  // Qo'shiqni srazu boshlash
+  // Qo'shiqni darhol boshlashga harakat qilish
   startBackgroundMusic();
 
   // Dastlabki bayram mushagi
@@ -381,13 +381,20 @@ document.addEventListener('DOMContentLoaded', () => {
     launchGrandFireworks();
   }, 600);
 
-  // Autoplay unlock: birinchi foydalanuvchi harakatida (mousemove, touch, scroll) ovozni faollashtirish
-  const unlockEvents = ['click', 'touchstart', 'mousemove', 'scroll', 'keydown'];
-  const unlockAudio = () => {
-    startBackgroundMusic();
-    unlockEvents.forEach(evt => document.removeEventListener(evt, unlockAudio));
+  // Foydalanuvchi sahifaning istalgan joyiga bossa yoki teginsa, darhol qo'shiqni boshlash
+  const handleFirstInteraction = () => {
+    ensureAudioPlaying();
+    const audio = getAudioElement();
+    if (audio && !audio.paused) {
+      ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+        window.removeEventListener(evt, handleFirstInteraction);
+      });
+    }
   };
-  unlockEvents.forEach(evt => document.addEventListener(evt, unlockAudio, { passive: true }));
+
+  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+    window.addEventListener(evt, handleFirstInteraction, { passive: true });
+  });
 });
 
 // --- 4. MODAL: "USTIGA BOSING" (2 BOSQICHLI OQIM: FANLAR -> KEYINGISI/SKIP -> TABRIK) ---
@@ -397,9 +404,8 @@ function openWishModalWithSubjects() {
 
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
   }
 
   // 1-bosqich: Fanlarni tanlash ekranini ko'rsatamiz
@@ -412,14 +418,19 @@ function showSubjectSelectionStep() {
   if (!content) return;
 
   content.innerHTML = `
-    <div class="certificate-frame">
+    <div class="certificate-frame relative">
+      <!-- ULTRA-VISIBLE 'X' CLOSE BUTTON INSIDE MODAL -->
+      <button onclick="closeWishModal()" class="modal-close-btn" aria-label="Yopish">
+        ✕
+      </button>
+
       <div class="corner-ornament corner-tl"></div>
       <div class="corner-ornament corner-tr"></div>
       <div class="corner-ornament corner-bl"></div>
       <div class="corner-ornament corner-br"></div>
 
       <!-- Header -->
-      <div class="text-center mb-6">
+      <div class="text-center mb-6 pt-2">
         <div class="inline-block px-4 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 text-xs font-bold uppercase tracking-wider mb-2">
           🎓 1-Qadam: Darslikni tanlang
         </div>
@@ -457,7 +468,6 @@ function showSubjectSelectionStep() {
           <span>O'tkazib yuborish (Skip) &rarr;</span>
         </button>
       </div>
-
     </div>
   `;
 }
@@ -507,14 +517,19 @@ function showWishDisplayStep() {
   }
 
   content.innerHTML = `
-    <div class="certificate-frame">
+    <div class="certificate-frame relative">
+      <!-- ULTRA-VISIBLE 'X' CLOSE BUTTON INSIDE MODAL -->
+      <button onclick="closeWishModal()" class="modal-close-btn" aria-label="Yopish">
+        ✕
+      </button>
+
       <div class="corner-ornament corner-tl"></div>
       <div class="corner-ornament corner-tr"></div>
       <div class="corner-ornament corner-bl"></div>
       <div class="corner-ornament corner-br"></div>
 
       <!-- Icon & Fan nomi -->
-      <div class="text-center mb-5">
+      <div class="text-center mb-5 pt-2">
         <div class="text-5xl mb-2 animate-bounce">${wish.icon}</div>
         <div class="inline-block px-4 py-1 rounded-full text-xs font-bold text-yellow-300 bg-yellow-500/20 border border-yellow-500/50 mb-2 tracking-wide uppercase">
           ${selectedNamesLabel}
@@ -573,10 +588,9 @@ function refreshWishDisplay() {
 function closeWishModal() {
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    modal.style.display = 'none';
   }
-  document.body.style.overflow = 'auto';
+  document.body.classList.remove('modal-open');
 }
 
 // ESC tugmasi bilan yopish
@@ -590,7 +604,6 @@ document.addEventListener('keydown', (e) => {
 // --- 5. AUDIO & QO'SHIQ BOSHQARUVI (2 TA QO'SHIQ PLEIYLISTI, BIR ZUMDA BOSHLANADI) ---
 const PLAYLIST = ['music.mp3', 'music2.mp3'];
 let currentTrackIdx = 0;
-isAudioPlaying = false;
 
 function getAudioElement() {
   let audio = document.getElementById('bg-audio');
@@ -615,9 +628,11 @@ function playTrack(idx) {
   const audio = getAudioElement();
   if (!audio) return;
 
-  currentTrackIdx = idx % PLAYLIST.length;
+  if (idx !== undefined) {
+    currentTrackIdx = idx % PLAYLIST.length;
+  }
   const targetSrc = PLAYLIST[currentTrackIdx];
-  if (!audio.src.endsWith(targetSrc)) {
+  if (!audio.src || !audio.src.includes(targetSrc)) {
     audio.src = targetSrc;
   }
 
@@ -625,16 +640,22 @@ function playTrack(idx) {
   if (!audio.dataset.hasEndedListener) {
     audio.dataset.hasEndedListener = 'true';
     audio.addEventListener('ended', () => {
-      playTrack(currentTrackIdx + 1);
+      currentTrackIdx = (currentTrackIdx + 1) % PLAYLIST.length;
+      playTrack(currentTrackIdx);
     });
   }
 
-  audio.play().then(() => {
-    isAudioPlaying = true;
-    updateMusicButtonUi();
-  }).catch((err) => {
-    // Brauzer birinchi harakatni kutadi
-  });
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      isAudioPlaying = true;
+      updateMusicButtonUi();
+    }).catch((err) => {
+      // Brauzer autoplay qoidasi bo'yicha foydalanuvchi bosishini kutadi
+      isAudioPlaying = false;
+      updateMusicButtonUi();
+    });
+  }
 }
 
 function startBackgroundMusic() {
@@ -671,6 +692,7 @@ function updateMusicButtonUi() {
 
 // --- 6. VISA PAYMENT & SCREENSHOT UPLOAD ($29.99) ---
 function openPaymentModal() {
+  ensureAudioPlaying();
   const modal = document.getElementById('payment-modal');
   const form = document.getElementById('visa-payment-form');
   const successBox = document.getElementById('payment-success-box');
@@ -679,9 +701,8 @@ function openPaymentModal() {
   if (successBox) successBox.classList.add('hidden');
 
   if (modal) {
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
   }
 
   initCreditCardLiveInput();
@@ -690,10 +711,9 @@ function openPaymentModal() {
 function closePaymentModal() {
   const modal = document.getElementById('payment-modal');
   if (modal) {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    modal.style.display = 'none';
   }
-  document.body.style.overflow = 'auto';
+  document.body.classList.remove('modal-open');
 }
 
 function initCreditCardLiveInput() {

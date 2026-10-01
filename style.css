@@ -233,25 +233,27 @@ body {
   box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
 }
 
-/* Wish Certificate Box (Full Responsive & Scrollable) */
+/* Wish Certificate Box (Full Responsive, 100% Opaque Solid Dark Luxury & Scrollable) */
 .certificate-frame {
   position: relative;
-  background: radial-gradient(circle at center, #131c35 0%, #080d1e 100%);
-  border: 2px solid #ffd700;
-  border-radius: 24px;
-  padding: 28px 20px;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 215, 0, 0.2);
-  width: 100%;
-  max-width: 620px;
-  margin: 0 auto;
-  max-height: 88vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  background-color: #080c1a !important;
+  background: linear-gradient(180deg, #11182e 0%, #080c1a 100%) !important;
+  border: 2px solid #ffd700 !important;
+  border-radius: 24px !important;
+  padding: 32px 24px !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.98), 0 0 40px rgba(255, 215, 0, 0.25) !important;
+  width: 100% !important;
+  max-width: 640px !important;
+  margin: auto !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  z-index: 1000000 !important;
 }
 
 @media (min-width: 640px) {
   .certificate-frame {
-    padding: 36px 30px;
+    padding: 38px 32px !important;
   }
 }
 
@@ -279,37 +281,67 @@ body {
 .corner-bl { bottom: 12px; left: 12px; border-bottom: 3px solid #ffd700; border-left: 3px solid #ffd700; }
 .corner-br { bottom: 12px; right: 12px; border-bottom: 3px solid #ffd700; border-right: 3px solid #ffd700; }
 
-/* Modal Backdrop & Close Button */
+/* Modal Backdrop & Overlay (Completely covers background and blocks all bleed-through) */
 .modal-backdrop {
-  background: rgba(3, 6, 16, 0.9);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: rgba(4, 7, 18, 0.97) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Dim background elements when modal is open so zero text can clash */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+body.modal-open .content-wrapper {
+  opacity: 0.05 !important;
+  filter: blur(12px) !important;
+  pointer-events: none !important;
+}
+
+.content-wrapper {
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
 .modal-close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 999;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #e11d48;
-  color: #ffffff;
-  border: 2px solid #ffd700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 900;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(225, 29, 72, 0.6);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  z-index: 1000005 !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #e11d48 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffd700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(225, 29, 72, 0.6) !important;
+  transition: transform 0.2s ease, background-color 0.2s ease !important;
 }
 
 .modal-close-btn:hover {
-  transform: scale(1.15) rotate(90deg);
-  background: #be123c;
+  transform: scale(1.12) rotate(90deg) !important;
+  background: #be123c !important;
 }
 
 /* VIP Special Section & Visa Card Styling */
