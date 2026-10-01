@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1-Oktyabr — Ustoz va Murabbiylar Kuni Muborak Bo'lsin!</title>
   
-  <!-- Meta SEO & Social Sharing -->
   <meta name="description" content="1-Oktyabr Ustoz va murabbiylar kuni uchun 3D interaktiv bayram veb-sayti. Har bir fan ustozi uchun 100+ mukammal tilaklar.">
   <meta property="og:title" content="1-Oktyabr — Ustoz va Murabbiylar Kuni!">
-  <meta property="og:description" content="Muhtaram Ustoz, o'z faningizni tanlang va qalb qo'rimizdan chiqqan bayram tilaklarini qabul qiling!">
-  <meta property="og:type" content="website">
+  <meta property="og:description" content="Muhtaram Ustoz, qaysi fandan dars berasiz? O'z faningizni tanlang va qalb so'zlarini qabul qiling!">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- External Libraries (Three.js, Confetti) -->
+  <!-- External Libraries (Three.js & Canvas Confetti) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -26,39 +24,57 @@
   <!-- 3D Three.js Background Canvas -->
   <canvas id="webgl-canvas"></canvas>
 
-  <!-- Floating Audio Toggle Button -->
-  <button id="music-toggle-btn" onclick="toggleAudio()" class="music-toggle music-muted" title="Nafis bayram musiqasini yoqish/o'chirish">
-    <div class="music-bars">
-      <div class="music-bar"></div>
-      <div class="music-bar"></div>
-      <div class="music-bar"></div>
-      <div class="music-bar"></div>
+  <!-- FLOATING MUSIC PLAYER BAR -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-3 bg-black/70 backdrop-blur-md border border-yellow-500/40 px-4 py-2 rounded-full shadow-2xl">
+    <div class="flex items-center gap-2">
+      <span class="text-xl animate-bounce">🎵</span>
+      <span class="text-xs font-bold text-yellow-300 hidden sm:inline tracking-wider uppercase">Ustozlar Qo'shig'i</span>
     </div>
-  </button>
+    <button id="main-music-btn" onclick="toggleYouTubeMusic()" class="px-3 py-1 rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs transition-all active:scale-95 flex items-center gap-1">
+      <span id="music-btn-icon">▶️</span>
+      <span id="music-btn-text">Qo'shiqni Yoqish</span>
+    </button>
+  </div>
+
+  <!-- YOUTUBE IFRAME (Background audio / player) -->
+  <div id="youtube-player-container" class="fixed bottom-4 left-4 z-40 bg-black/80 backdrop-blur-md p-2 rounded-2xl border border-yellow-500/30 shadow-2xl transition-all duration-300">
+    <div class="flex items-center justify-between gap-3 px-2 pb-1">
+      <span class="text-[11px] font-bold text-yellow-300 uppercase tracking-widest flex items-center gap-1">
+        <span>🎬</span> 1-Oktyabr Taronasi
+      </span>
+      <button onclick="togglePlayerMinimize()" class="text-xs text-gray-400 hover:text-white px-1">
+        <span id="player-min-icon">➖</span>
+      </button>
+    </div>
+    <div id="player-wrapper" class="w-64 h-36 rounded-xl overflow-hidden mt-1">
+      <!-- 1-oktyabr Ustozlar bayrami uchun eng mashhur video -->
+      <iframe id="yt-iframe" class="w-full h-full" src="https://www.youtube.com/embed/nPDAOxT50q4?enablejsapi=1&autoplay=1&loop=1&playlist=nPDAOxT50q4" title="1-Oktyabr Ustozlar Qo'shig'i" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
 
   <!-- MAIN CONTENT -->
   <div class="content-wrapper">
 
     <!-- HERO SECTION -->
-    <header class="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-4 py-16">
+    <header class="relative pt-12 pb-8 px-4 text-center">
       
-      <!-- Top Badge -->
-      <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 backdrop-blur-md mb-6 animate-pulse">
+      <!-- Top Ribbon -->
+      <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 backdrop-blur-md mb-6 animate-pulse shadow-lg">
         <span class="text-xl">✨</span>
-        <span class="text-xs sm:text-sm font-semibold tracking-widest text-yellow-300 uppercase">
+        <span class="text-xs sm:text-sm font-bold tracking-widest text-yellow-300 uppercase">
           1-Oktyabr — Qutlug' Ayyom
         </span>
         <span class="text-xl">✨</span>
       </div>
 
       <!-- Main Heading -->
-      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-serif tracking-tight leading-none mb-6">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-serif tracking-tight leading-none mb-4">
         <span class="block text-white drop-shadow-lg">BAYRAMINGIZ MUBORAK,</span>
         <span class="gold-text">AZIZ USTOZLAR!</span>
       </h1>
 
-      <!-- Subtitle Quote -->
-      <p class="max-w-3xl text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-8 px-2">
+      <!-- Quote -->
+      <p class="max-w-3xl mx-auto text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-6 px-2">
         «Haq yo'linda kim senga bir harf o'rgatmish ranj ila,<br class="hidden sm:inline">
         Aylamak bo'lmas ado oning haqin yuz ganj ila.»
         <span class="block text-yellow-400 font-sans text-xs tracking-wider uppercase mt-2 not-italic font-bold">
@@ -66,96 +82,54 @@
         </span>
       </p>
 
-      <!-- Center Magic Action: "Ustiga bosing" -->
-      <div class="flex flex-col items-center justify-center gap-4 z-20">
-        <button onclick="openGeneralMagicWish()" class="glow-btn px-9 py-4 rounded-full gold-gradient-bg text-black font-black text-lg sm:text-xl flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95">
-          <span class="text-2xl animate-bounce">🎁</span>
+      <!-- Center Action Button: "Ustiga bosing" -->
+      <div class="flex flex-col items-center justify-center my-6">
+        <button onclick="handleGeneralClick()" class="glow-btn px-10 py-5 rounded-full gold-gradient-bg text-black font-black text-xl sm:text-2xl flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
+          <span class="text-3xl animate-bounce">🎁</span>
           <span>Ustiga bosing</span>
         </button>
-        <span class="text-xs text-yellow-300/80 uppercase tracking-widest font-semibold">
-          (Kutilmagan bayram qutlovini ko'rish uchun)
+        <span class="text-xs text-yellow-300 font-semibold tracking-widest uppercase mt-3">
+          (Umumiy bayramona kutilmagan tilakni ochish)
         </span>
-      </div>
-
-      <!-- Scroll to Subject Section -->
-      <div class="mt-14 flex flex-col items-center gap-2 opacity-80 animate-bounce">
-        <a href="#subjects-section" class="text-xs tracking-widest uppercase text-yellow-400 font-bold hover:underline flex items-center gap-1.5">
-          <span>Qaysi fandan dars berasiz? Pastga qarang</span>
-          <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </a>
       </div>
     </header>
 
 
-    <!-- SECTION: QAYSI FANDAN DARS BERASIZ? (SUBJECT PICKER & 100+ WISHES) -->
-    <section id="subjects-section" class="max-w-7xl mx-auto px-4 py-16 scroll-mt-6">
+    <!-- MAIN SECTION: MUHTARAM USTOZ, QAYSI FANDAN DARS BERASIZ? -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
       
-      <!-- Section Title -->
-      <div class="text-center mb-12">
-        <div class="inline-block px-5 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 text-yellow-300 text-xs sm:text-sm font-bold uppercase tracking-wider mb-4">
-          🎓 Maxsus Savol
+      <!-- Big Direct Header -->
+      <div class="text-center mb-10 bg-gradient-to-r from-yellow-500/10 via-yellow-500/20 to-yellow-500/10 border-y border-yellow-500/30 py-8 rounded-3xl backdrop-blur-md">
+        <div class="inline-block px-4 py-1 rounded-full bg-yellow-500 text-black text-xs font-black uppercase tracking-wider mb-3">
+          🎓 Savol
         </div>
-        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white mb-4">
+        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white tracking-tight">
           Muhtaram Ustoz, <span class="gold-text">qaysi fandan dars berasiz?</span>
         </h2>
-        <p class="text-gray-300 max-w-2xl mx-auto text-base sm:text-lg font-light">
-          O'zingiz saboq beradigan fanni tanlang va faqat sizning fidoiy kasbingizga atalgan 100 dan ortiq mukammal, yurakdan chiqqan professional tilaklarni o'qing:
+        <p class="text-gray-300 text-sm sm:text-base mt-3 max-w-2xl mx-auto font-light">
+          O'zingiz saboq beradigan fanni tanlang. Har bir fan uchun <span class="text-yellow-400 font-bold">kamida 100 ta</span> mukammal va professional tilak tayyorlangan:
         </p>
       </div>
 
-      <!-- Grid of Subjects (11 Subjects) -->
+      <!-- Subject Cards Grid (11 Subjects) -->
       <div id="subject-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <!-- JS orqali render bo'ladi -->
+        <!-- Javascript orqali dinamik to'ldiriladi -->
       </div>
-    </section>
-
-
-    <!-- SECTION: EHTIROM VA MINNATDORCHILIK DOSKASI (WISH WALL) -->
-    <section class="max-w-5xl mx-auto px-4 py-16">
-      <div class="glass-panel p-8 sm:p-12 relative overflow-hidden border border-yellow-500/30">
-        <div class="text-center mb-8">
-          <span class="text-xs font-semibold px-4 py-1.5 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge inline-block mb-3 uppercase tracking-widest">
-            Xalq Ehtiromi
-          </span>
-          <h2 class="text-3xl font-bold font-serif text-white mb-2">
-            Ustozlar Uchun <span class="gold-text">Dil So'zlaringizni</span> Qoldiring
-          </h2>
-          <p class="text-gray-300 text-sm">
-            Barcha shogirdlar va mehmonlar o'z minnatdorchiliklarini ushbu tabriklar devoriga yozib qoldirishi mumkin.
-          </p>
-        </div>
-
-        <!-- Form -->
-        <form onsubmit="submitUserWish(event)" class="max-w-2xl mx-auto mb-10 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input type="text" id="wall-author-name" required placeholder="Ismingiz yoki sinfingiz..." class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm">
-            <button type="submit" class="w-full py-3 rounded-xl gold-gradient-bg text-black font-bold text-sm shadow-lg hover:shadow-yellow-500/30 transition-transform active:scale-95 flex items-center justify-center gap-2">
-              <span>Yozuvni Qoldirish 🌟</span>
-            </button>
-          </div>
-          <textarea id="wall-wish-text" required rows="3" placeholder="Ustozingizga aytmoqchi bo'lgan eng ezgu va samimiy tilagingiz..." class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm"></textarea>
-        </form>
-
-        <!-- Dynamic User Wishes List -->
-        <div id="user-wishes-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <!-- JS orqali to'ldiriladi -->
-        </div>
-      </div>
-    </section>
+    </main>
 
 
     <!-- FOOTER -->
-    <footer class="border-t border-yellow-500/20 py-12 text-center text-gray-400 text-xs sm:text-sm">
+    <footer class="border-t border-yellow-500/20 py-12 text-center text-gray-400 text-xs sm:text-sm mt-16">
       <div class="max-w-4xl mx-auto px-4">
         <div class="text-4xl mb-3">🎓</div>
         <p class="text-yellow-300 font-serif font-bold text-xl mb-2">
-          1-Oktyabr — O'qituvchi va Murabbiylar Kuni Muborak Bo'lsin!
+          1-Oktyabr — O'qituvchi va Murabbiylar Kuni Qutlug' Bo'lsin!
         </p>
-        <p class="text-gray-400 max-w-lg mx-auto mb-6 leading-relaxed">
-          Dunyodagi barcha zahmatkash, fidoyi va mehribon ustozlarimizga bosh egib ta'zim qilamiz. Umringiz uzoq, ilmingiz va martabangiz doimo ziyoda bo'lsin!
+        <p class="text-gray-400 max-w-lg mx-auto mb-4 leading-relaxed">
+          Dunyodagi barcha zahmatkash, fidoyi va mehribon ustozlarimiz oldida bosh egib ta'zim qilamiz. Umringiz uzoq, martabangiz doimo yuksak bo'lsin!
         </p>
         <div class="text-gray-500 text-[11px]">
-          1-Oktyabr bayrami uchun maxsus tayyorlandi.
+          1-Oktyabr umumxalq bayrami munosabati bilan shogirdlar tomonidan yaratildi.
         </div>
       </div>
     </footer>
@@ -167,8 +141,8 @@
   <div id="wish-modal" class="fixed inset-0 z-[200] hidden items-center justify-center modal-backdrop p-4 overflow-y-auto">
     <div class="relative w-full max-w-2xl my-8">
       
-      <!-- Ultra-Visible & Easy-Click 'X' Close Button -->
-      <button onclick="closeWishModal()" class="modal-close-btn" title="Yopish (X)">
+      <!-- ULTRA-VISIBLE 'X' CLOSE BUTTON -->
+      <button onclick="closeWishModal()" class="modal-close-btn" aria-label="Yopish">
         ✕
       </button>
 
@@ -179,9 +153,8 @@
   </div>
 
 
-  <!-- Scripts -->
-  <script src="data/wishes.js"></script>
-  <script src="script.js"></script>
+  <!-- Script: Barcha ma'lumotlar va logika bitta faylda -->
+  <script src="app.js"></script>
 
 </body>
 </html>
