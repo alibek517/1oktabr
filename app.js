@@ -392,6 +392,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- 4. MODAL: "USTIGA BOSING" (2 BOSQICHLI OQIM: FANLAR -> KEYINGISI/SKIP -> TABRIK) ---
 function openWishModalWithSubjects() {
+  // Foydalanuvchi "Ustiga bosing"ni bosgan payti darhol qo'shiqni boshlash
+  ensureAudioPlaying();
+
   const modal = document.getElementById('wish-modal');
   if (modal) {
     modal.classList.remove('hidden');
@@ -584,28 +587,69 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// --- 5. AUDIO & QO'SHIQ BOSHQARUVI (BITTA TUGMACHA, YOUTUBEDAN BILINMAYDI) ---
-function startBackgroundMusic() {
-  const iframe = document.getElementById('yt-iframe');
-  if (iframe && iframe.contentWindow) {
-    try {
-      iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-      isAudioPlaying = true;
-      updateMusicButtonUi();
-    } catch(e) {}
+// --- 5. AUDIO & QO'SHIQ BOSHQARUVI (2 TA QO'SHIQ PLEIYLISTI, BIR ZUMDA BOSHLANADI) ---
+const PLAYLIST = ['music.mp3', 'music2.mp3'];
+let currentTrackIdx = 0;
+isAudioPlaying = false;
+
+function getAudioElement() {
+  let audio = document.getElementById('bg-audio');
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = 'bg-audio';
+    audio.preload = 'auto';
+    audio.src = PLAYLIST[0];
+    document.body.appendChild(audio);
+  }
+  return audio;
+}
+
+function ensureAudioPlaying() {
+  const audio = getAudioElement();
+  if (audio && audio.paused) {
+    playTrack(currentTrackIdx);
   }
 }
 
-function toggleAudioPlayback() {
-  const iframe = document.getElementById('yt-iframe');
-  if (!iframe || !iframe.contentWindow) return;
+function playTrack(idx) {
+  const audio = getAudioElement();
+  if (!audio) return;
 
-  if (isAudioPlaying) {
-    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+  currentTrackIdx = idx % PLAYLIST.length;
+  const targetSrc = PLAYLIST[currentTrackIdx];
+  if (!audio.src.endsWith(targetSrc)) {
+    audio.src = targetSrc;
+  }
+
+  // 1-qo'shiq tugagach avtomatik 2-qo'shiqqa, 2-tugagach yana 1-qo'shiqqa o'tadi
+  if (!audio.dataset.hasEndedListener) {
+    audio.dataset.hasEndedListener = 'true';
+    audio.addEventListener('ended', () => {
+      playTrack(currentTrackIdx + 1);
+    });
+  }
+
+  audio.play().then(() => {
+    isAudioPlaying = true;
+    updateMusicButtonUi();
+  }).catch((err) => {
+    // Brauzer birinchi harakatni kutadi
+  });
+}
+
+function startBackgroundMusic() {
+  playTrack(currentTrackIdx);
+}
+
+function toggleAudioPlayback() {
+  const audio = getAudioElement();
+  if (!audio) return;
+
+  if (!audio.paused) {
+    audio.pause();
     isAudioPlaying = false;
   } else {
-    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-    isAudioPlaying = true;
+    playTrack(currentTrackIdx);
   }
   updateMusicButtonUi();
 }
@@ -613,9 +657,10 @@ function toggleAudioPlayback() {
 function updateMusicButtonUi() {
   const btn = document.getElementById('music-single-btn');
   const icon = document.getElementById('music-btn-icon');
+  const audio = getAudioElement();
   if (!btn || !icon) return;
 
-  if (isAudioPlaying) {
+  if (audio && !audio.paused) {
     icon.innerText = '⏸';
     btn.classList.add('playing');
   } else {
