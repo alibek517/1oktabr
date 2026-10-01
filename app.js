@@ -707,8 +707,6 @@ function openPaymentModal() {
   }
   document.documentElement.classList.add('modal-locked');
   document.body.classList.add('modal-locked');
-
-  initCreditCardLiveInput();
 }
 
 function closePaymentModal() {
@@ -720,39 +718,37 @@ function closePaymentModal() {
   document.body.classList.remove('modal-locked');
 }
 
-function initCreditCardLiveInput() {
-  const numInput = document.getElementById('pay-card-number');
-  const expInput = document.getElementById('pay-card-expiry');
-  const holderInput = document.getElementById('pay-card-holder');
+// Karta raqamidan 1-klik bilan nusxa olish funksiyasi
+function copyCardNumberToClipboard() {
+  const cardNum = "4916990322328599";
+  const btnText = document.getElementById('copy-btn-text');
 
-  const prevNum = document.getElementById('card-preview-number');
-  const prevExp = document.getElementById('card-preview-expiry');
-  const prevHolder = document.getElementById('card-preview-holder');
-
-  if (!numInput || numInput.dataset.listenerAdded) return;
-  numInput.dataset.listenerAdded = 'true';
-
-  numInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
-    let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-    e.target.value = formatted;
-    if (prevNum) prevNum.innerText = formatted || '•••• •••• •••• ••••';
-  });
-
-  expInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
-    if (val.length >= 3) {
-      val = val.substring(0, 2) + '/' + val.substring(2, 4);
+  const showSuccess = () => {
+    if (btnText) {
+      btnText.innerText = "Nusxa olindi! ✓";
+      setTimeout(() => {
+        btnText.innerText = "Nusxa olish";
+      }, 2500);
     }
-    e.target.value = val;
-    if (prevExp) prevExp.innerText = val || 'MM/YY';
-  });
+  };
 
-  holderInput.addEventListener('input', (e) => {
-    let val = e.target.value.toUpperCase();
-    e.target.value = val;
-    if (prevHolder) prevHolder.innerText = val || 'ISMI SHARIFI';
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cardNum).then(showSuccess).catch(() => {
+      fallbackCopy(cardNum, showSuccess);
+    });
+  } else {
+    fallbackCopy(cardNum, showSuccess);
+  }
+}
+
+function fallbackCopy(text, callback) {
+  const tempInput = document.createElement("input");
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+  if (callback) callback();
 }
 
 function handleScreenshotUpload(event) {
@@ -779,6 +775,12 @@ function handleScreenshotUpload(event) {
 function submitVisaPayment(event) {
   event.preventDefault();
 
+  const fileInput = document.getElementById('pay-screenshot-input');
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert("Iltimos, to'lov cheki skrinshotini biriktiring!");
+    return;
+  }
+
   const btn = document.getElementById('btn-submit-payment');
   const originalText = btn.innerHTML;
 
@@ -800,7 +802,7 @@ function submitVisaPayment(event) {
     launchGrandFireworks();
     btn.innerHTML = originalText;
     btn.disabled = false;
-  }, 1200);
+  }, 1000);
 }
 
 // --- 7. FIREWORKS & CONFETTI ---

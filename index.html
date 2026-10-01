@@ -292,125 +292,129 @@
         <div class="corner-ornament corner-br"></div>
 
         <!-- Header -->
+        <!-- Header -->
         <div class="text-center mb-6">
           <div class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-xs font-bold uppercase tracking-wider mb-2">
-            <span>💳</span> Viza Karta Kiriting ($29.99)
+            <span>💳</span> Eksklyuziv VIP Xizmat ($29.99)
           </div>
           <h2 class="text-2xl sm:text-3xl font-black font-serif gold-text">
             Maxsus Atalgan Tabrikka Buyurtma
           </h2>
           <p class="text-xs text-gray-300 mt-1 font-light">
-            Viza kartangiz ma'lumotlarini kiriting va to'lov skrinshotini biriktiring:
+            Quyidagi rasmiy Viza kartaga to'lovni o'tkazing va chek skrinshotini biriktiring:
+          </p>
+        </div>
+
+        <!-- RECIPIENT VISA CARD DISPLAY -->
+        <div class="credit-card-preview p-5 sm:p-6 text-white mb-5 border-2 border-yellow-400/80 shadow-2xl relative rounded-2xl bg-gradient-to-br from-gray-900 via-blue-950 to-black">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">💳</span>
+              <span class="text-[11px] sm:text-xs tracking-widest text-yellow-300 font-extrabold uppercase">
+                TO'LOV QABUL QILUVCHI VIZA KARTA
+              </span>
+            </div>
+            <span class="text-2xl sm:text-3xl font-black italic tracking-wider text-blue-400 font-sans">VISA</span>
+          </div>
+
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-11 h-8 rounded bg-gradient-to-tr from-amber-400 to-yellow-200 border border-yellow-100 flex items-center justify-center text-[10px] text-black font-mono font-bold shadow-md">
+              CHIP
+            </div>
+            <div class="inline-flex items-center gap-1.5 bg-yellow-500/20 border border-yellow-400/50 px-3 py-1 rounded-full text-xs font-mono font-bold text-yellow-300">
+              <span>Narxi:</span>
+              <span class="text-white font-extrabold">$29.99 USD</span>
+            </div>
+          </div>
+
+          <!-- Karta raqami va 1-klik bilan Nusxa olish tugmasi -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4 bg-black/60 p-3.5 rounded-xl border border-yellow-500/50">
+            <div id="target-card-number" class="text-xl sm:text-2xl font-mono font-black tracking-widest text-yellow-300 text-center sm:text-left select-all">
+              4916 9903 2232 8599
+            </div>
+            <button type="button" onclick="copyCardNumberToClipboard()" id="btn-copy-card" class="px-4 py-2 rounded-lg gold-gradient-bg text-black font-bold text-xs flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-lg cursor-pointer shrink-0">
+              <span class="text-sm">📋</span>
+              <span id="copy-btn-text">Nusxa olish</span>
+            </button>
+          </div>
+
+          <div class="flex justify-between items-end text-xs pt-2 border-t border-white/10">
+            <div>
+              <span class="text-[9px] uppercase text-gray-400 block font-semibold tracking-wider">Karta Egasi (Qabul qiluvchi):</span>
+              <span class="font-mono uppercase text-white font-black tracking-wider text-sm sm:text-base">
+                RADJAPOV SHERZOD
+              </span>
+            </div>
+            <div class="text-right">
+              <span class="text-[9px] uppercase text-gray-400 block font-semibold tracking-wider">Holati:</span>
+              <span class="font-mono text-green-400 font-bold flex items-center gap-1 justify-end">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Faol
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Qo'llanma eslatma -->
+        <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3.5 mb-5 text-xs text-yellow-200 flex items-start gap-2.5">
+          <span class="text-lg shrink-0">💡</span>
+          <p class="leading-relaxed">
+            Istalgan bank ilovasi (Visa, Click, Payme yoki mobil bank) orqali yuqoridagi <strong>4916 9903 2232 8599 (RADJAPOV SHERZOD)</strong> kartasiga <strong>$29.99</strong> o'tkazing va to'lov skrinshotini quyida biriktiring:
           </p>
         </div>
 
         <!-- Form content -->
         <form id="visa-payment-form" onsubmit="submitVisaPayment(event)" class="space-y-4 text-left">
           
-          <!-- Virtual Visa Card Preview -->
-          <div class="credit-card-preview p-5 text-white mb-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs tracking-widest text-yellow-300 font-semibold uppercase">PREMIUM VIP CARD</span>
-              <span class="text-2xl font-black italic tracking-wider text-blue-400">VISA</span>
-            </div>
-            <div class="w-10 h-7 rounded bg-amber-400/80 mb-3 border border-yellow-200 flex items-center justify-center text-[10px] text-black font-mono font-bold">
-              CHIP
-            </div>
-            <div id="card-preview-number" class="text-lg sm:text-xl font-mono tracking-widest text-yellow-100 mb-3">
-              •••• •••• •••• ••••
-            </div>
-            <div class="flex justify-between items-end text-xs">
-              <div>
-                <span class="text-[9px] uppercase text-gray-400 block font-semibold">Karta Egasi:</span>
-                <span id="card-preview-holder" class="font-mono uppercase text-gray-200 font-bold tracking-wider">
-                  ISMI SHARIFI
-                </span>
-              </div>
-              <div class="text-right">
-                <span class="text-[9px] uppercase text-gray-400 block font-semibold">Muddat:</span>
-                <span id="card-preview-expiry" class="font-mono text-gray-200 font-bold">
-                  MM/YY
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card Details Input Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                Viza Karta Raqami (16 ta raqam):
-              </label>
-              <input type="text" id="pay-card-number" required maxlength="19" placeholder="4000 1234 5678 9010" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                Amal Qilish Muddati (MM/YY):
-              </label>
-              <input type="text" id="pay-card-expiry" required maxlength="5" placeholder="12/28" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                CVV / CVC (3 xonali):
-              </label>
-              <input type="password" id="pay-card-cvv" required maxlength="3" placeholder="•••" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
-
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                Karta Egasining To'liq Ismi:
-              </label>
-              <input type="text" id="pay-card-holder" required placeholder="Masalan: ALIBEK RAHMATULLAYEV" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white uppercase placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
-          </div>
-
           <!-- Ustoz haqida ma'lumotlar -->
-          <div class="pt-2 border-t border-white/10 space-y-3">
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                Ustozingizning To'liq Ismi va Fani:
-              </label>
-              <input type="text" id="pay-teacher-info" required placeholder="Masalan: Maftuna Karimova, Matematika fani" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+              Ustozingizning To'liq Ismi va Fani: <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="pay-teacher-info" required placeholder="Masalan: Dilnoza Karimova, Ona tili va adabiyot fani" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+          </div>
 
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
-                Natijani olish uchun Telegram username yoki Telefon:
-              </label>
-              <input type="text" id="pay-contact-info" required placeholder="@telegram_username yoki +998901234567" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
-            </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+              Natijani olish uchun Telegram username yoki Telefon: <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="pay-contact-info" required placeholder="@telegram_username yoki +998901234567" class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+          </div>
 
-            <!-- Screenshot yuklash qismi -->
-            <div>
-              <label class="block text-xs font-semibold text-yellow-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <span>📸</span> To'lov yoki Karta Skrinshotini Yuklang:
-              </label>
-              <div class="border-2 border-dashed border-yellow-500/40 rounded-xl p-4 text-center bg-black/40 hover:border-yellow-400 transition-colors cursor-pointer relative">
-                <input type="file" id="pay-screenshot-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" onchange="handleScreenshotUpload(event)">
-                <div id="screenshot-upload-prompt" class="space-y-1">
-                  <div class="text-3xl">📤</div>
-                  <p class="text-xs text-yellow-300 font-semibold">Skrinshotni tanlang yoki shu yerga tashlang</p>
-                  <p class="text-[10px] text-gray-400">PNG, JPG, JPEG formatda rasm</p>
-                </div>
-                <!-- Preview konteyneri -->
-                <div id="screenshot-preview-container" class="hidden mt-2 flex flex-col items-center">
-                  <img id="screenshot-preview-img" src="" alt="Screenshot preview" class="max-h-36 rounded-lg border border-yellow-500/50 shadow-md">
-                  <span id="screenshot-filename" class="text-[11px] text-yellow-300 mt-1 font-mono"></span>
-                </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+              Ustoz haqida qo'shimcha tilak yoki xotira (ixtiyoriy):
+            </label>
+            <input type="text" id="pay-notes-info" placeholder="Masalan: Eng qattiqqo'l, ammo eng mehribon ustozim edilar..." class="w-full bg-black/50 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400">
+          </div>
+
+          <!-- Screenshot yuklash qismi -->
+          <div>
+            <label class="block text-xs font-semibold text-yellow-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <span>📸</span> To'lov Cheki Skrinshotini Yuklang: <span class="text-red-400">*</span>
+            </label>
+            <div class="border-2 border-dashed border-yellow-500/40 rounded-xl p-4 text-center bg-black/40 hover:border-yellow-400 transition-colors cursor-pointer relative">
+              <input type="file" id="pay-screenshot-input" required accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" onchange="handleScreenshotUpload(event)">
+              <div id="screenshot-upload-prompt" class="space-y-1">
+                <div class="text-3xl">📤</div>
+                <p class="text-xs text-yellow-300 font-semibold">To'lov skrinshotini tanlang yoki shu yerga tashlang</p>
+                <p class="text-[10px] text-gray-400">PNG, JPG, JPEG formatda to'lov kvitansiyasi</p>
+              </div>
+              <!-- Preview konteyneri -->
+              <div id="screenshot-preview-container" class="hidden mt-2 flex flex-col items-center">
+                <img id="screenshot-preview-img" src="" alt="Screenshot preview" class="max-h-36 rounded-lg border border-yellow-500/50 shadow-md">
+                <span id="screenshot-filename" class="text-[11px] text-yellow-300 mt-1 font-mono"></span>
               </div>
             </div>
           </div>
 
           <!-- Submit Button -->
-          <div class="pt-4">
+          <div class="pt-2">
             <button type="submit" id="btn-submit-payment" class="w-full py-4 rounded-xl gold-gradient-bg text-black font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-2xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer glow-btn">
               <span>💳</span>
-              <span>To'lovni Tasdiqlash ($29.99)</span>
+              <span>To'lovni Tasdiqlash va Buyurtma Berish ($29.99)</span>
             </button>
             <p class="text-center text-[10px] text-gray-400 mt-2">
-              To'lov tasdiqlangach, maxsus atalgan tabrik 15 daqiqa ichida Telegramingizga yuboriladi.
+              To'lov tasdiqlangach, shoirlarimiz yozgan shaxsiy tabriknoma 15 daqiqa ichida Telegramingizga yuboriladi.
             </p>
           </div>
         </form>
@@ -419,14 +423,15 @@
         <div id="payment-success-box" class="hidden text-center py-8 space-y-4">
           <div class="text-6xl animate-bounce">🎉</div>
           <h3 class="text-2xl sm:text-3xl font-bold font-serif gold-text">
-            To'lov Muvaffaqiyatli Qabul Qilindi!
+            To'lov va Buyurtma Qabul Qilindi!
           </h3>
           <p class="text-sm text-gray-200 max-w-md mx-auto leading-relaxed">
-            Muhtaram buyurtmachi, sizning Viza karta to'lovingiz va skrinshotingiz tizimga qabul qilindi.
+            Muhtaram buyurtmachi, sizning to'lov chekingiz va buyurtmangiz tizimga muvaffaqiyatli qabul qilindi.
           </p>
-          <div class="bg-black/50 border border-yellow-500/30 rounded-xl p-4 max-w-sm mx-auto font-mono text-xs text-yellow-300">
-            <div>Buyurtma ID: <span id="success-order-id">VIP-83921</span></div>
-            <div>Holati: <span class="text-green-400 font-bold">To'landi ($29.99)</span></div>
+          <div class="bg-black/50 border border-yellow-500/30 rounded-xl p-4 max-w-sm mx-auto font-mono text-xs text-yellow-300 space-y-1">
+            <div>Buyurtma ID: <span id="success-order-id" class="font-bold text-white">VIP-83921</span></div>
+            <div>To'lov qabul qiluvchi: <span class="text-white">4916 9903 2232 8599 (RADJAPOV SHERZOD)</span></div>
+            <div>Holati: <span class="text-green-400 font-bold">To'landi ($29.99 USD)</span></div>
           </div>
           <p class="text-xs text-gray-400">
             Professional qalamkashlarimiz ustozingiz uchun eksklyuziv tabrikni tayyorlab, ko'rsatilgan Telegram hisobingizga tez fursatda yuborishadi.
@@ -1152,8 +1157,6 @@ function openPaymentModal() {
   }
   document.documentElement.classList.add('modal-locked');
   document.body.classList.add('modal-locked');
-
-  initCreditCardLiveInput();
 }
 
 function closePaymentModal() {
@@ -1165,39 +1168,37 @@ function closePaymentModal() {
   document.body.classList.remove('modal-locked');
 }
 
-function initCreditCardLiveInput() {
-  const numInput = document.getElementById('pay-card-number');
-  const expInput = document.getElementById('pay-card-expiry');
-  const holderInput = document.getElementById('pay-card-holder');
+// Karta raqamidan 1-klik bilan nusxa olish funksiyasi
+function copyCardNumberToClipboard() {
+  const cardNum = "4916990322328599";
+  const btnText = document.getElementById('copy-btn-text');
 
-  const prevNum = document.getElementById('card-preview-number');
-  const prevExp = document.getElementById('card-preview-expiry');
-  const prevHolder = document.getElementById('card-preview-holder');
-
-  if (!numInput || numInput.dataset.listenerAdded) return;
-  numInput.dataset.listenerAdded = 'true';
-
-  numInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
-    let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-    e.target.value = formatted;
-    if (prevNum) prevNum.innerText = formatted || '•••• •••• •••• ••••';
-  });
-
-  expInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
-    if (val.length >= 3) {
-      val = val.substring(0, 2) + '/' + val.substring(2, 4);
+  const showSuccess = () => {
+    if (btnText) {
+      btnText.innerText = "Nusxa olindi! ✓";
+      setTimeout(() => {
+        btnText.innerText = "Nusxa olish";
+      }, 2500);
     }
-    e.target.value = val;
-    if (prevExp) prevExp.innerText = val || 'MM/YY';
-  });
+  };
 
-  holderInput.addEventListener('input', (e) => {
-    let val = e.target.value.toUpperCase();
-    e.target.value = val;
-    if (prevHolder) prevHolder.innerText = val || 'ISMI SHARIFI';
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cardNum).then(showSuccess).catch(() => {
+      fallbackCopy(cardNum, showSuccess);
+    });
+  } else {
+    fallbackCopy(cardNum, showSuccess);
+  }
+}
+
+function fallbackCopy(text, callback) {
+  const tempInput = document.createElement("input");
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+  if (callback) callback();
 }
 
 function handleScreenshotUpload(event) {
@@ -1224,6 +1225,12 @@ function handleScreenshotUpload(event) {
 function submitVisaPayment(event) {
   event.preventDefault();
 
+  const fileInput = document.getElementById('pay-screenshot-input');
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert("Iltimos, to'lov cheki skrinshotini biriktiring!");
+    return;
+  }
+
   const btn = document.getElementById('btn-submit-payment');
   const originalText = btn.innerHTML;
 
@@ -1245,7 +1252,7 @@ function submitVisaPayment(event) {
     launchGrandFireworks();
     btn.innerHTML = originalText;
     btn.disabled = false;
-  }, 1200);
+  }, 1000);
 }
 
 // --- 7. FIREWORKS & CONFETTI ---
