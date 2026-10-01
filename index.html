@@ -6,18 +6,17 @@
   <title>1-Oktyabr — Ustoz va Murabbiylar Kuni Muborak Bo'lsin!</title>
   
   <!-- Meta SEO & Social Sharing -->
-  <meta name="description" content="1-Oktyabr Ustoz va murabbiylar kuni uchun maxsus 3D interaktiv bayram veb-sayti va tabriknomalar to'plami.">
+  <meta name="description" content="1-Oktyabr Ustoz va murabbiylar kuni uchun 3D interaktiv bayram veb-sayti. Har bir fan ustozi uchun 100+ mukammal tilaklar.">
   <meta property="og:title" content="1-Oktyabr — Ustoz va Murabbiylar Kuni!">
-  <meta property="og:description" content="Aziz ustozlarimiz uchun eng ezgu tilaklar, 3D animatsiyalar va shaxsiy tabriknoma generatori.">
+  <meta property="og:description" content="Muhtaram Ustoz, o'z faningizni tanlang va qalb qo'rimizdan chiqqan bayram tilaklarini qabul qiling!">
   <meta property="og:type" content="website">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- External Libraries (Three.js, Confetti, HTML2Canvas) -->
+  <!-- External Libraries (Three.js, Confetti) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
@@ -28,7 +27,7 @@
   <canvas id="webgl-canvas"></canvas>
 
   <!-- Floating Audio Toggle Button -->
-  <button id="music-toggle-btn" onclick="toggleAudio()" class="music-toggle music-muted" title="Bayramona musiqani yoqish/o'chirish">
+  <button id="music-toggle-btn" onclick="toggleAudio()" class="music-toggle music-muted" title="Nafis bayram musiqasini yoqish/o'chirish">
     <div class="music-bars">
       <div class="music-bar"></div>
       <div class="music-bar"></div>
@@ -41,7 +40,7 @@
   <div class="content-wrapper">
 
     <!-- HERO SECTION -->
-    <header class="relative min-h-[92vh] flex flex-col justify-center items-center text-center px-4 py-16">
+    <header class="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-4 py-16">
       
       <!-- Top Badge -->
       <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 backdrop-blur-md mb-6 animate-pulse">
@@ -59,7 +58,7 @@
       </h1>
 
       <!-- Subtitle Quote -->
-      <p class="max-w-3xl text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-10 px-2">
+      <p class="max-w-3xl text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-8 px-2">
         «Haq yo'linda kim senga bir harf o'rgatmish ranj ila,<br class="hidden sm:inline">
         Aylamak bo'lmas ado oning haqin yuz ganj ila.»
         <span class="block text-yellow-400 font-sans text-xs tracking-wider uppercase mt-2 not-italic font-bold">
@@ -67,255 +66,53 @@
         </span>
       </p>
 
-      <!-- Action Buttons -->
-      <div class="flex flex-wrap items-center justify-center gap-4 z-20">
-        <button onclick="openMagicGift()" class="glow-btn px-8 py-4 rounded-full gold-gradient-bg text-black font-bold text-base sm:text-lg flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95">
-          <span class="text-2xl">🎁</span>
-          <span>Sehrli Tilak Ochish</span>
+      <!-- Center Magic Action: "Ustiga bosing" -->
+      <div class="flex flex-col items-center justify-center gap-4 z-20">
+        <button onclick="openGeneralMagicWish()" class="glow-btn px-9 py-4 rounded-full gold-gradient-bg text-black font-black text-lg sm:text-xl flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95">
+          <span class="text-2xl animate-bounce">🎁</span>
+          <span>Ustiga bosing</span>
         </button>
+        <span class="text-xs text-yellow-300/80 uppercase tracking-widest font-semibold">
+          (Kutilmagan bayram qutlovini ko'rish uchun)
+        </span>
+      </div>
 
-        <a href="#card-builder" class="px-8 py-4 rounded-full glass-panel hover:bg-white/10 text-yellow-300 border border-yellow-500/40 font-semibold text-base sm:text-lg flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
-          <span>✍️ Shaxsiy Tabriknoma Yasash</span>
+      <!-- Scroll to Subject Section -->
+      <div class="mt-14 flex flex-col items-center gap-2 opacity-80 animate-bounce">
+        <a href="#subjects-section" class="text-xs tracking-widest uppercase text-yellow-400 font-bold hover:underline flex items-center gap-1.5">
+          <span>Qaysi fandan dars berasiz? Pastga qarang</span>
+          <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </a>
-      </div>
-
-      <!-- Quick Stats / Badges -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl w-full">
-        <div class="glass-panel p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-bold text-yellow-400 font-serif">50+</div>
-          <div class="text-xs text-gray-300 mt-1">Noyob va Samimiy Tilaklar</div>
-        </div>
-        <div class="glass-panel p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-bold text-yellow-400 font-serif">10+</div>
-          <div class="text-xs text-gray-300 mt-1">Har Xil Fanlar Bo'yicha</div>
-        </div>
-        <div class="glass-panel p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-bold text-yellow-400 font-serif">3D</div>
-          <div class="text-xs text-gray-300 mt-1">Interaktiv Fazoviy Animatsiya</div>
-        </div>
-        <div class="glass-panel p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-bold text-yellow-400 font-serif">HD</div>
-          <div class="text-xs text-gray-300 mt-1">Rasm Qilib Saqlash Imkoni</div>
-        </div>
-      </div>
-
-      <!-- Scroll Indicator -->
-      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-70 animate-bounce">
-        <span class="text-[10px] tracking-widest uppercase text-yellow-300">Pastga suring</span>
-        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
       </div>
     </header>
 
 
-    <!-- SECTION: SEHRLI BAYRAM SANDIG'I (MAGIC GIFT EXPERIENCE) -->
-    <section class="max-w-5xl mx-auto px-4 py-16">
-      <div class="glass-panel p-8 sm:p-12 text-center relative overflow-hidden border border-yellow-500/30">
-        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <span class="text-xs font-semibold px-4 py-1.5 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge inline-block mb-4 uppercase tracking-widest">
-          Kutilmagan Sovg'a
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-bold font-serif text-white mb-4">
-          Qaysi Ustoz Ochsa Ham Ko'ngli Tog'dek Ko'tariladi!
-        </h2>
-        <p class="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base mb-8">
-          Ushbu sehrli tugmani bosing va ustozingiz uchun mo'ljallangan yuksak adabiy, samimiy va professional qutlovni qabul qilib oling!
-        </p>
-
-        <!-- 3D Interactive Gift Box Icon -->
-        <div class="gift-box-wrapper my-6">
-          <div onclick="openMagicGift()" class="gift-box flex flex-col items-center justify-center bg-gradient-to-tr from-yellow-600 via-yellow-400 to-amber-200 rounded-3xl p-6 shadow-2xl border-2 border-yellow-200">
-            <span class="text-6xl animate-pulse">🎁</span>
-            <span class="text-[11px] font-bold text-black uppercase mt-2 tracking-wider">Ochish Uchun Bosing</span>
-          </div>
-        </div>
-
-        <button onclick="openMagicGift()" class="px-8 py-3.5 rounded-full gold-gradient-bg text-black font-bold text-base shadow-lg hover:shadow-yellow-500/30 transition-transform active:scale-95 inline-flex items-center gap-2">
-          <span>✨ Yangi Tasodifiy Tilakni Ko'rish ✨</span>
-        </button>
-      </div>
-    </section>
-
-
-    <!-- SECTION: SHAXSIY TABRIKNOMA YARATUVCHI (CARD BUILDER) -->
-    <section id="card-builder" class="max-w-6xl mx-auto px-4 py-16">
+    <!-- SECTION: QAYSI FANDAN DARS BERASIZ? (SUBJECT PICKER & 100+ WISHES) -->
+    <section id="subjects-section" class="max-w-7xl mx-auto px-4 py-16 scroll-mt-6">
+      
+      <!-- Section Title -->
       <div class="text-center mb-12">
-        <span class="text-xs font-semibold px-4 py-1.5 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge inline-block mb-3 uppercase tracking-widest">
-          Personalized Card Studio
-        </span>
-        <h2 class="text-3xl sm:text-5xl font-bold font-serif text-white mb-4">
-          O'z Ustozingizga <span class="gold-text">Maxsus Tabriknoma</span> Yarating
+        <div class="inline-block px-5 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 text-yellow-300 text-xs sm:text-sm font-bold uppercase tracking-wider mb-4">
+          🎓 Maxsus Savol
+        </div>
+        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white mb-4">
+          Muhtaram Ustoz, <span class="gold-text">qaysi fandan dars berasiz?</span>
         </h2>
-        <p class="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base">
-          O'qituvchingizning ismini kiriting, fanni tanlang va bir zumda unga moslashtirilgan hashamatli bayram kartochkasini yarating. Uni HD rasm sifatida yuklab olib, Telegramdan yuborishingiz mumkin!
+        <p class="text-gray-300 max-w-2xl mx-auto text-base sm:text-lg font-light">
+          O'zingiz saboq beradigan fanni tanlang va faqat sizning fidoiy kasbingizga atalgan 100 dan ortiq mukammal, yurakdan chiqqan professional tilaklarni o'qing:
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- Input Form (Left 5 Cols) -->
-        <div class="lg:col-span-5 glass-panel p-6 sm:p-8">
-          <h3 class="text-xl font-bold font-serif text-yellow-300 mb-6 flex items-center gap-2">
-            <span>📝</span> Ma'lumotlarni Kiriting
-          </h3>
-
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                Ustozingizning Ismi va Sharafi:
-              </label>
-              <input type="text" id="gen-teacher-name" placeholder="Masalan: Aziza Xoliqova yoki Ustozim" class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 transition-colors">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                Qaysi Fan Ustozi:
-              </label>
-              <select id="gen-subject" class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 transition-colors">
-                <option value="general">🌟 Barcha Ustozlar Uchun (Umumiy & Falsafiy)</option>
-                <option value="math">📐 Matematika va Mantiq</option>
-                <option value="literature">📚 Ona Tili va Adabiyot</option>
-                <option value="physics">⚡ Fizika va Astronomiya</option>
-                <option value="chemistry">🧪 Kimyo va Biologiya</option>
-                <option value="languages">🌍 Xorijiy Tillar (Ingliz tili)</option>
-                <option value="history">🗺️ Tarix va Geografiya</option>
-                <option value="it">💻 Informatika va Dasturlash</option>
-                <option value="primary">🧸 Boshlang'ich Ta'lim</option>
-                <option value="sports">🏆 Jismoniy Tarbiya va Sport</option>
-                <option value="art">🎨 San'at va Musiqa</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                Tabriklovchi (Shogird / Sinf):
-              </label>
-              <input type="text" id="gen-student-name" placeholder="Masalan: Shogirdingiz Farrux yoki 10-A sinf" class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 transition-colors">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                Shaxsiy qo'shimcha so'zingiz (ixtiyoriy):
-              </label>
-              <textarea id="gen-custom-msg" rows="3" placeholder="O'z dil so'zlaringizni yozsangiz, u avtomatik kartada aks etadi..." class="w-full bg-black/40 border border-yellow-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 transition-colors text-sm"></textarea>
-            </div>
-
-            <!-- Actions -->
-            <div class="pt-4 flex flex-col gap-3">
-              <button id="btn-download-card" onclick="downloadCardAsImage()" class="w-full py-3.5 px-4 rounded-xl gold-gradient-bg text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-yellow-500/30 transition-transform active:scale-95">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                <span>Tabriknomani Rasm Qilib Saqlash (HD)</span>
-              </button>
-
-              <div class="grid grid-cols-2 gap-2">
-                <button onclick="copyGeneratedCardText()" class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors border border-white/10">
-                  <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                  <span>Matnni Nusxalash</span>
-                </button>
-                <button onclick="shareGeneratedCardTelegram()" class="py-2.5 px-3 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                  <span>Telegramda Yuborish</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Live Certificate Preview (Right 7 Cols) -->
-        <div class="lg:col-span-7 flex flex-col items-center">
-          <div class="text-xs uppercase tracking-widest text-yellow-400 font-semibold mb-3 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
-            Jonli Ko'rinish (Live Preview)
-          </div>
-
-          <!-- Rasm qilinadigan kartochka bloki -->
-          <div id="custom-card-render" class="certificate-frame w-full max-w-xl text-center select-none">
-            <div class="corner-ornament corner-tl"></div>
-            <div class="corner-ornament corner-tr"></div>
-            <div class="corner-ornament corner-bl"></div>
-            <div class="corner-ornament corner-br"></div>
-
-            <!-- Header Badge -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-xs font-semibold mb-4">
-              <span>🌟</span> 1-OKTYABR TABRIKNOMASI <span>🌟</span>
-            </div>
-
-            <!-- Teacher Recipient -->
-            <h4 class="text-xs text-gray-400 uppercase tracking-widest mb-1">Muhtaram va Aziz:</h4>
-            <h3 id="card-preview-teacher" class="text-2xl sm:text-3xl font-bold font-serif gold-text mb-4">
-              Hurmatli va Mehribon Ustozim!
-            </h3>
-
-            <!-- Quote banner -->
-            <div class="bg-black/40 border border-yellow-500/20 rounded-xl p-3 my-4">
-              <p id="card-preview-quote" class="text-yellow-200 italic font-garamond text-sm sm:text-base">
-                "Haq yo'linda kim senga bir harf o'rgatmish ranj ila, Aylamak bo'lmas ado oning haqin yuz ganj ila." — Alisher Navoiy
-              </p>
-            </div>
-
-            <!-- Main greeting text -->
-            <p id="card-preview-text" class="text-gray-200 text-sm sm:text-base leading-relaxed text-justify indent-4 my-6 font-light">
-              Siz bizga nafaqat bilim va fan sirlarini, balki insoniylik, sabr, halollik va or-nomus fazilatlarini o'rgatdingiz. Har bir darsingiz hayotimiz uchun mayoq, har bir so'zingiz kelajagimizga qanot bo'ldi. Bayramingiz bilan chin dildan muborakbod etamiz!
-            </p>
-
-            <!-- Footer Seal & Signature -->
-            <div class="flex items-center justify-between pt-6 border-t border-yellow-500/30 mt-4 text-left">
-              <div>
-                <span class="text-[10px] uppercase tracking-wider text-yellow-400 block font-semibold">Tantana Bilan Yo'llovchi:</span>
-                <span id="card-preview-student" class="text-xs sm:text-sm font-medium text-white italic">
-                  Sizni cheksiz qadrlovchi shogirdingiz
-                </span>
-              </div>
-              <div class="gold-seal text-[10px] font-bold text-black text-center uppercase tracking-tighter shrink-0">
-                1-OKT<br>BAYRAM
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- SECTION: TILAKLAR KATALOGI VA FANLAR FILTRATSIYASI -->
-    <section class="max-w-7xl mx-auto px-4 py-16">
-      <div class="text-center mb-10">
-        <span class="text-xs font-semibold px-4 py-1.5 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge inline-block mb-3 uppercase tracking-widest">
-          Boy Tilaklar Xazinasi
-        </span>
-        <h2 class="text-3xl sm:text-5xl font-bold font-serif text-white mb-4">
-          Har Bitta Fan Ustozi Uchun <span class="gold-text">Maxsus Tilaklar</span>
-        </h2>
-        <p class="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base">
-          O'qituvchingizning faniga mos keladigan professional, chuqur adabiy va samimiy tilakni tanlang:
-        </p>
-
-        <!-- Category Filters -->
-        <div class="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-5xl mx-auto">
-          <button onclick="filterCategory('all', this)" class="category-btn active">🌟 Barcha Tilaklar</button>
-          <button onclick="filterCategory('math', this)" class="category-btn">📐 Matematika</button>
-          <button onclick="filterCategory('literature', this)" class="category-btn">📚 Ona tili & Adabiyot</button>
-          <button onclick="filterCategory('physics', this)" class="category-btn">⚡ Fizika</button>
-          <button onclick="filterCategory('chemistry', this)" class="category-btn">🧪 Kimyo & Biologiya</button>
-          <button onclick="filterCategory('languages', this)" class="category-btn">🌍 Xorijiy Tillar</button>
-          <button onclick="filterCategory('history', this)" class="category-btn">🗺️ Tarix & Geografiya</button>
-          <button onclick="filterCategory('it', this)" class="category-btn">💻 IT & Informatika</button>
-          <button onclick="filterCategory('primary', this)" class="category-btn">🧸 Boshlang'ich Ta'lim</button>
-          <button onclick="filterCategory('sports', this)" class="category-btn">🏆 Sport & Jismoniy</button>
-          <button onclick="filterCategory('art', this)" class="category-btn">🎨 San'at & Musiqa</button>
-        </div>
-      </div>
-
-      <!-- Wishes Grid -->
-      <div id="wishes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Javascript orqali render bo'ladi -->
+      <!-- Grid of Subjects (11 Subjects) -->
+      <div id="subject-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- JS orqali render bo'ladi -->
       </div>
     </section>
 
 
     <!-- SECTION: EHTIROM VA MINNATDORCHILIK DOSKASI (WISH WALL) -->
     <section class="max-w-5xl mx-auto px-4 py-16">
-      <div class="glass-panel p-8 sm:p-12 relative overflow-hidden">
+      <div class="glass-panel p-8 sm:p-12 relative overflow-hidden border border-yellow-500/30">
         <div class="text-center mb-8">
           <span class="text-xs font-semibold px-4 py-1.5 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge inline-block mb-3 uppercase tracking-widest">
             Xalq Ehtiromi
@@ -350,15 +147,15 @@
     <!-- FOOTER -->
     <footer class="border-t border-yellow-500/20 py-12 text-center text-gray-400 text-xs sm:text-sm">
       <div class="max-w-4xl mx-auto px-4">
-        <div class="text-3xl mb-3">🎓</div>
-        <p class="text-yellow-300 font-serif font-bold text-lg mb-2">
+        <div class="text-4xl mb-3">🎓</div>
+        <p class="text-yellow-300 font-serif font-bold text-xl mb-2">
           1-Oktyabr — O'qituvchi va Murabbiylar Kuni Muborak Bo'lsin!
         </p>
-        <p class="text-gray-400 max-w-lg mx-auto mb-6">
-          Dunyodagi barcha zahmatkash, fidoyi va mehribon ustozlarimizga bosh egib ta'zim qilamiz. Umringiz uzoq, ilmingiz ziyoda bo'lsin!
+        <p class="text-gray-400 max-w-lg mx-auto mb-6 leading-relaxed">
+          Dunyodagi barcha zahmatkash, fidoyi va mehribon ustozlarimizga bosh egib ta'zim qilamiz. Umringiz uzoq, ilmingiz va martabangiz doimo ziyoda bo'lsin!
         </p>
         <div class="text-gray-500 text-[11px]">
-          Ushbu veb-sayt Vercel platformasida bir zumda ishlaydigan tarzda, shogirdlar ehtiromi bilan yaratildi.
+          1-Oktyabr bayrami uchun maxsus tayyorlandi.
         </div>
       </div>
     </footer>
@@ -366,21 +163,23 @@
   </div>
 
 
-  <!-- MODAL: TO'LIQ TILAK KO'RINIShI (WISH MODAL) -->
+  <!-- MODAL: HAR BIR FAN UCHUN 100+ TILAK VA ANIQ BOSILADIGAN 'X' TUGMASI -->
   <div id="wish-modal" class="fixed inset-0 z-[200] hidden items-center justify-center modal-backdrop p-4 overflow-y-auto">
     <div class="relative w-full max-w-2xl my-8">
-      <!-- Close button -->
-      <button onclick="closeWishModal()" class="absolute -top-4 -right-4 z-10 w-10 h-10 rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold flex items-center justify-center shadow-xl transition-transform active:scale-95 text-lg">
+      
+      <!-- Ultra-Visible & Easy-Click 'X' Close Button -->
+      <button onclick="closeWishModal()" class="modal-close-btn" title="Yopish (X)">
         ✕
       </button>
+
       <div id="modal-wish-content">
-        <!-- Dinamik kontent -->
+        <!-- Dinamik kontent: Fan tilaklari va "Yana bitta tilak o'qish (Ustiga bosing)" -->
       </div>
     </div>
   </div>
 
 
-  <!-- External Wishes Data & Logic Scripts -->
+  <!-- Scripts -->
   <script src="data/wishes.js"></script>
   <script src="script.js"></script>
 
