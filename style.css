@@ -281,7 +281,8 @@ body {
 .corner-bl { bottom: 12px; left: 12px; border-bottom: 3px solid #ffd700; border-left: 3px solid #ffd700; }
 .corner-br { bottom: 12px; right: 12px; border-bottom: 3px solid #ffd700; border-right: 3px solid #ffd700; }
 
-/* Modal Backdrop & Overlay (Completely covers background and blocks all bleed-through) */
+/* Modal Overlay & Backdrop (Screen-centered, fixed, zero scroll on background) */
+.modal-overlay,
 .modal-backdrop {
   position: fixed !important;
   inset: 0 !important;
@@ -291,24 +292,31 @@ body {
   bottom: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 999999 !important;
-  background: rgba(4, 7, 18, 0.97) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  display: flex !important;
+  z-index: 9999999 !important;
+  background: rgba(3, 6, 16, 0.96) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+  display: none !important; /* Default strictly hidden */
   align-items: center !important;
   justify-content: center !important;
   padding: 16px !important;
-  overflow-y: auto !important;
   box-sizing: border-box !important;
+  overflow: hidden !important; /* Overlay itself never scrolls */
 }
 
-/* Dim background elements when modal is open so zero text can clash */
-body.modal-open {
+.modal-overlay.active,
+.modal-backdrop.active {
+  display: flex !important; /* Shown strictly when active */
+}
+
+/* Prevent entire webpage from scrolling when modal is active */
+html.modal-locked, body.modal-locked {
   overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none !important;
 }
 
-body.modal-open .content-wrapper {
+body.modal-locked .content-wrapper {
   opacity: 0.05 !important;
   filter: blur(12px) !important;
   pointer-events: none !important;
@@ -318,13 +326,33 @@ body.modal-open .content-wrapper {
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
+/* Modal Card Centered on Screen */
+.modal-center-card {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 650px !important;
+  margin: auto !important;
+  animation: modalCenterPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes modalCenterPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .modal-close-btn {
   position: absolute !important;
   top: 14px !important;
   right: 14px !important;
   z-index: 1000005 !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: 42px !important;
+  height: 42px !important;
   border-radius: 50% !important;
   background: #e11d48 !important;
   color: #ffffff !important;

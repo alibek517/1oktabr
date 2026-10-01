@@ -9,8 +9,8 @@
   <meta property="og:title" content="1-Oktyabr — Ustoz va Murabbiylar Kuni!">
   <meta property="og:description" content="Muhtaram Ustoz, qaysi fandan dars berasiz? O'z faningizni tanlang va qalb so'zlarini qabul qiling!">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Favicon (Inline Data URI to guarantee 0% 404 error across all browsers) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
   <link rel="alternate icon" href="favicon.ico">
 
   <!-- Production Tailwind CSS (No console warnings) -->
@@ -20,8 +20,136 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Custom CSS with cache-busting query -->
+  <link rel="stylesheet" href="style.css?v=20261001_final">
+
+  <style>
+    /* ========================================================
+       MODAL: STRICT COMPUTER-SCREEN-CENTERED FIX (IMMUNE TO CACHE)
+       ======================================================== */
+    .modal-overlay,
+    .modal-backdrop {
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 9999999 !important;
+      background: rgba(3, 6, 16, 0.96) !important;
+      backdrop-filter: blur(22px) !important;
+      -webkit-backdrop-filter: blur(22px) !important;
+      display: none !important; /* Default strictly hidden */
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 16px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important; /* The overlay never scrolls */
+    }
+
+    .modal-overlay.active,
+    .modal-backdrop.active {
+      display: flex !important; /* Shown only when active */
+    }
+
+    /* Prevent entire webpage from scrolling when modal is active */
+    html.modal-locked, body.modal-locked {
+      overflow: hidden !important;
+      height: 100vh !important;
+      touch-action: none !important;
+    }
+
+    body.modal-locked .content-wrapper {
+      opacity: 0.05 !important;
+      filter: blur(12px) !important;
+      pointer-events: none !important;
+    }
+
+    /* Modal Card Centered on Screen */
+    .modal-center-card {
+      position: relative !important;
+      width: 100% !important;
+      max-width: 650px !important;
+      margin: auto !important;
+      animation: modalCenterPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    @keyframes modalCenterPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Certificate Frame: Centered & Scrollbar ONLY inside if content exceeds height */
+    .certificate-frame {
+      position: relative !important;
+      background-color: #080c1a !important;
+      background: radial-gradient(circle at 50% 10%, #151d38 0%, #080c1a 100%) !important;
+      border: 2px solid #ffd700 !important;
+      border-radius: 26px !important;
+      padding: 34px 24px !important;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.98), 0 0 45px rgba(255, 215, 0, 0.28) !important;
+      width: 100% !important;
+      max-height: 86vh !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (min-width: 640px) {
+      .certificate-frame {
+        padding: 38px 32px !important;
+      }
+    }
+
+    .certificate-frame::-webkit-scrollbar {
+      width: 6px;
+    }
+    .certificate-frame::-webkit-scrollbar-track {
+      background: rgba(255, 215, 0, 0.05);
+      border-radius: 8px;
+    }
+    .certificate-frame::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.4);
+      border-radius: 8px;
+    }
+    .certificate-frame::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 215, 0, 0.7);
+    }
+
+    .modal-close-btn {
+      position: absolute !important;
+      top: 14px !important;
+      right: 14px !important;
+      z-index: 1000005 !important;
+      width: 42px !important;
+      height: 42px !important;
+      border-radius: 50% !important;
+      background: #e11d48 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffd700 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 20px !important;
+      font-weight: 900 !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(225, 29, 72, 0.6) !important;
+      transition: transform 0.2s ease, background-color 0.2s ease !important;
+    }
+
+    .modal-close-btn:hover {
+      transform: scale(1.12) rotate(90deg) !important;
+      background: #be123c !important;
+    }
+  </style>
 </head>
 <body class="selection:bg-yellow-500 selection:text-black">
 
@@ -139,8 +267,8 @@
 
 
   <!-- MODAL: HAR BIR FAN UCHUN 100+ TILAK VA ANIQ BOSILADIGAN 'X' TUGMASI -->
-  <div id="wish-modal" class="modal-backdrop" style="display: none;">
-    <div class="relative w-full max-w-2xl my-auto">
+  <div id="wish-modal" class="modal-overlay">
+    <div class="modal-center-card">
       <div id="modal-wish-content">
         <!-- Dinamik kontent: Fan tilaklari va "Yana bitta tilak o'qish (Ustiga bosing)" -->
       </div>
@@ -149,8 +277,8 @@
 
 
   <!-- MODAL: VIZA KARTA TO'LOVI VA SKRINSHOT YUKLASH ($29.99) -->
-  <div id="payment-modal" class="modal-backdrop" style="display: none;">
-    <div class="relative w-full max-w-2xl my-auto">
+  <div id="payment-modal" class="modal-overlay">
+    <div class="modal-center-card">
       <div class="certificate-frame relative">
         
         <!-- ULTRA-VISIBLE 'X' CLOSE BUTTON -->
@@ -721,9 +849,10 @@ function openWishModalWithSubjects() {
 
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
+    modal.classList.add('active');
   }
+  document.documentElement.classList.add('modal-locked');
+  document.body.classList.add('modal-locked');
 
   // 1-bosqich: Fanlarni tanlash ekranini ko'rsatamiz
   showSubjectSelectionStep();
@@ -905,9 +1034,10 @@ function refreshWishDisplay() {
 function closeWishModal() {
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
   }
-  document.body.classList.remove('modal-open');
+  document.documentElement.classList.remove('modal-locked');
+  document.body.classList.remove('modal-locked');
 }
 
 // ESC tugmasi bilan yopish
@@ -1018,9 +1148,10 @@ function openPaymentModal() {
   if (successBox) successBox.classList.add('hidden');
 
   if (modal) {
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
+    modal.classList.add('active');
   }
+  document.documentElement.classList.add('modal-locked');
+  document.body.classList.add('modal-locked');
 
   initCreditCardLiveInput();
 }
@@ -1028,9 +1159,10 @@ function openPaymentModal() {
 function closePaymentModal() {
   const modal = document.getElementById('payment-modal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
   }
-  document.body.classList.remove('modal-open');
+  document.documentElement.classList.remove('modal-locked');
+  document.body.classList.remove('modal-locked');
 }
 
 function initCreditCardLiveInput() {

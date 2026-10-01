@@ -404,9 +404,10 @@ function openWishModalWithSubjects() {
 
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
+    modal.classList.add('active');
   }
+  document.documentElement.classList.add('modal-locked');
+  document.body.classList.add('modal-locked');
 
   // 1-bosqich: Fanlarni tanlash ekranini ko'rsatamiz
   showSubjectSelectionStep();
@@ -588,9 +589,10 @@ function refreshWishDisplay() {
 function closeWishModal() {
   const modal = document.getElementById('wish-modal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
   }
-  document.body.classList.remove('modal-open');
+  document.documentElement.classList.remove('modal-locked');
+  document.body.classList.remove('modal-locked');
 }
 
 // ESC tugmasi bilan yopish
@@ -701,9 +703,10 @@ function openPaymentModal() {
   if (successBox) successBox.classList.add('hidden');
 
   if (modal) {
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
+    modal.classList.add('active');
   }
+  document.documentElement.classList.add('modal-locked');
+  document.body.classList.add('modal-locked');
 
   initCreditCardLiveInput();
 }
@@ -711,9 +714,10 @@ function openPaymentModal() {
 function closePaymentModal() {
   const modal = document.getElementById('payment-modal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
   }
-  document.body.classList.remove('modal-open');
+  document.documentElement.classList.remove('modal-locked');
+  document.body.classList.remove('modal-locked');
 }
 
 function initCreditCardLiveInput() {
