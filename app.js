@@ -1,23 +1,22 @@
 /* ========================================================
-   1-OKTYABR USTOZ VA MURABBIYLAR KUNI - ASOSIY ILOVA (app.js)
+   1-OKTYABR USTOZ VA MURABBIYLAR KUNI - YUKSAK DARAJA (app.js)
    ======================================================== */
 
 // --- 1. FANLAR RO'YXATI ---
 const SUBJECTS_CONFIG = [
-  { id: 'math', name: 'Matematika va Aniq fanlar', icon: '📐', desc: 'Mantiq, tenglamalar va cheksiz fazo ilmi' },
-  { id: 'literature', name: 'Ona tili va Adabiyot', icon: '📚', desc: 'So‘z durdonasi, ma’naviyat va she’riyat' },
-  { id: 'physics', name: 'Fizika va Astronomiya', icon: '⚡', desc: 'Koinot qonunlari, yorug‘lik va energiya' },
-  { id: 'chemistry', name: 'Kimyo va Biologiya', icon: '🧪', desc: 'Hayot kashfiyoti, tabiat va moddalar siri' },
-  { id: 'languages', name: 'Xorijiy Tillar (Ingliz tili)', icon: '🌍', desc: 'Global dunyo, chet tillari va yangi ufqlar' },
-  { id: 'it', name: 'Informatika va IT', icon: '💻', desc: 'Algoritmlar, dasturlash va raqamli kelajak' },
-  { id: 'history', name: 'Tarix va Geografiya', icon: '🗺️', desc: 'Buyuk ajdodlar ibrati, qit’alar va o‘lka tarixi' },
-  { id: 'primary', name: 'Boshlang‘ich Ta’lim', icon: '🧸', desc: 'Ilk qadam, mehr daryosi va ilk saboqlar' },
-  { id: 'sports', name: 'Jismoniy Tarbiya va Sport', icon: '🏆', desc: 'Iroda, matonat, sog‘lik va yuksak g‘alabalar' },
-  { id: 'art', name: 'San’at va Musiqa', icon: '🎨', desc: 'Qalb ohanglari, ranglar jilosi va nafosat' },
-  { id: 'general', name: 'Barcha Fan Ustozlari Uchun', icon: '🌟', desc: 'Umumiy, chuqur falsafiy va ehtirom tilaklari' }
+  { id: 'math', name: 'Matematika va Aniq fanlar', icon: '📐' },
+  { id: 'literature', name: 'Ona tili va Adabiyot', icon: '📚' },
+  { id: 'physics', name: 'Fizika va Astronomiya', icon: '⚡' },
+  { id: 'chemistry', name: 'Kimyo va Biologiya', icon: '🧪' },
+  { id: 'languages', name: 'Xorijiy Tillar (Ingliz tili)', icon: '🌍' },
+  { id: 'it', name: 'Informatika va IT', icon: '💻' },
+  { id: 'history', name: 'Tarix va Geografiya', icon: '🗺️' },
+  { id: 'primary', name: 'Boshlang‘ich Ta’lim', icon: '🧸' },
+  { id: 'sports', name: 'Jismoniy Tarbiya va Sport', icon: '🏆' },
+  { id: 'art', name: 'San’at va Musiqa', icon: '🎨' }
 ];
 
-// --- 2. HAR BIR FAN UCHUN 100+ MUKAMMAL TILAKLAR SHABLONLARI ---
+// --- 2. HAR BIR FAN UCHUN 100+ MUKAMMAL VA SAMIMIY TILAKLAR SHABLONLARI ---
 const BASE_TEMPLATES = {
   math: {
     titles: [
@@ -315,9 +314,11 @@ const BASE_TEMPLATES = {
 const ALL_WISHES = {};
 
 (function buildAllWishes() {
-  SUBJECTS_CONFIG.forEach(subj => {
+  const allSubjKeys = [...SUBJECTS_CONFIG.map(s => s.id), 'general'];
+  allSubjKeys.forEach(key => {
     const list = [];
-    const tpl = BASE_TEMPLATES[subj.id] || BASE_TEMPLATES.general;
+    const tpl = BASE_TEMPLATES[key] || BASE_TEMPLATES.general;
+    const subjObj = SUBJECTS_CONFIG.find(s => s.id === key) || { name: 'Barcha Ustozlar Uchun', icon: '🌟' };
 
     let id = 1;
     for (let t = 0; t < tpl.titles.length; t++) {
@@ -328,10 +329,10 @@ const ALL_WISHES = {};
 
             const q = tpl.quotes[(t + p1 + p2 + p3) % tpl.quotes.length];
             list.push({
-              id: `${subj.id}_${id++}`,
-              subjectId: subj.id,
-              subjectName: subj.name,
-              icon: subj.icon,
+              id: `${key}_${id++}`,
+              subjectId: key,
+              subjectName: subjObj.name,
+              icon: subjObj.icon,
               title: tpl.titles[t],
               quote: q.q,
               author: q.a,
@@ -346,106 +347,54 @@ const ALL_WISHES = {};
       if (list.length >= 105) break;
     }
 
-    ALL_WISHES[subj.id] = list;
+    ALL_WISHES[key] = list;
   });
 })();
 
-function getSubjectWish(subjectId) {
-  const arr = ALL_WISHES[subjectId] || ALL_WISHES.general;
+// Tanlangan fan(lar) bo'yicha tilak olish
+function getSelectedSubjectsWish() {
+  if (selectedSubjects.size === 0) {
+    const generalArr = ALL_WISHES['general'];
+    return generalArr[Math.floor(Math.random() * generalArr.length)];
+  }
+
+  // Tanlangan fanlardan bittasini tasodifiy tanlaymiz
+  const chosenArray = Array.from(selectedSubjects);
+  const randomSubjId = chosenArray[Math.floor(Math.random() * chosenArray.length)];
+  const arr = ALL_WISHES[randomSubjId] || ALL_WISHES['general'];
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// --- 3. GLOBAL STATE & EVENT HANDLING ---
-let currentSubject = 'general';
-let isMusicPlaying = true;
-let isPlayerMinimized = false;
+// --- 3. GLOBAL STATE & INITIALIZATION ---
+const selectedSubjects = new Set(); // Multi-select to'plami
+let isAudioPlaying = true;
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderSubjectGrid();
   initThreeJS();
   initClickFireworks();
+  startBackgroundMusic();
 
-  // Sahifa ochilganda bayram mushagi
+  // Dastlabki bayram mushagi
   setTimeout(() => {
     launchGrandFireworks();
-  }, 500);
+  }, 600);
 
-  // Foydalanuvchi ekranga teginishi bilan YouTube musiqani ishga tushirish (Autoplay unlock)
-  const unlockMusic = () => {
-    try {
-      const iframe = document.getElementById('yt-iframe');
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-      }
-    } catch(e) {}
-    document.removeEventListener('click', unlockMusic);
-    document.removeEventListener('touchstart', unlockMusic);
+  // Autoplay unlock: birinchi foydalanuvchi teginishida ovozni faollashtirish
+  const unlockAudio = () => {
+    startBackgroundMusic();
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
   };
-  document.addEventListener('click', unlockMusic);
-  document.addEventListener('touchstart', unlockMusic);
+  document.addEventListener('click', unlockAudio);
+  document.addEventListener('touchstart', unlockAudio);
 });
 
-// Fanlar kartochkalarini chiqarish
-function renderSubjectGrid() {
-  const container = document.getElementById('subject-cards-container');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  SUBJECTS_CONFIG.forEach(subj => {
-    const card = document.createElement('div');
-    card.className = 'glass-panel p-6 subject-card flex flex-col justify-between border border-yellow-500/30 group cursor-pointer';
-    card.onclick = () => selectSubject(subj.id);
-
-    card.innerHTML = `
-      <div>
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-4xl group-hover:scale-125 transition-transform duration-300">${subj.icon}</span>
-          <span class="text-[11px] px-3 py-1 rounded-full border border-yellow-500/40 text-yellow-300 shimmer-badge font-bold uppercase">
-            100+ Tilak
-          </span>
-        </div>
-        <h3 class="text-xl font-bold font-serif text-white mb-2 group-hover:text-yellow-300 transition-colors">
-          ${subj.name}
-        </h3>
-        <p class="text-xs text-gray-300 leading-relaxed font-light">
-          ${subj.desc}
-        </p>
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-        <span class="text-xs text-yellow-400 font-bold group-hover:underline">Ustiga bosing &rarr;</span>
-        <span class="text-xs bg-yellow-500/20 group-hover:bg-yellow-500 text-yellow-300 group-hover:text-black font-extrabold px-3 py-1.5 rounded-full transition-all">
-          Ochish ✨
-        </span>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-// Bosh sahifadagi "Ustiga bosing" tugmasi
-function handleGeneralClick() {
-  selectSubject('general');
-}
-
-// Fanni tanlash va tilakni ochish
-function selectSubject(subjectId) {
-  currentSubject = subjectId;
-  showWishModal();
-}
-
-// Modal oynada tilakni ko'rsatish
-function showWishModal() {
-  const wish = getSubjectWish(currentSubject);
-  if (!wish) return;
-
-  launchGrandFireworks();
-
+// --- 4. MODAL: "USTIGA BOSING" (FAN TANLASH VA 100+ TILAKLAR) ---
+function openWishModalWithSubjects() {
   const modal = document.getElementById('wish-modal');
   const content = document.getElementById('modal-wish-content');
 
+  // Modal ichki strukturasini yasaymiz (Fanlar chiplari + Tabriknoma kartasi + Tugmalar)
   content.innerHTML = `
     <div class="certificate-frame">
       <div class="corner-ornament corner-tl"></div>
@@ -453,56 +402,130 @@ function showWishModal() {
       <div class="corner-ornament corner-bl"></div>
       <div class="corner-ornament corner-br"></div>
 
-      <!-- Sarlavha & Fan belgisi -->
-      <div class="text-center mb-6">
-        <div class="text-5xl mb-2 animate-bounce">${wish.icon}</div>
-        <div class="inline-block px-4 py-1.5 rounded-full text-xs font-bold text-yellow-300 bg-yellow-500/20 border border-yellow-500/50 mb-2 tracking-wide uppercase">
-          ${wish.subjectName}
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-bold font-serif gold-text px-2">
-          ${wish.title}
-        </h2>
-      </div>
-
-      <!-- Hikmatli iqtibos -->
-      <div class="bg-black/40 p-4 rounded-xl border border-yellow-500/30 my-4 text-center">
-        <p class="text-yellow-200 italic font-garamond text-base sm:text-lg">
-          "${wish.quote}"
+      <!-- FAN SO'RASH QISMI (MODAL ICHIDA) -->
+      <div class="mb-6 pb-4 border-b border-yellow-500/30 text-center">
+        <p class="text-xs sm:text-sm font-bold text-yellow-300 uppercase tracking-wider mb-3">
+          🎓 Qaysi fandan dars berasiz? <span class="text-gray-300 font-normal normal-case text-xs block sm:inline sm:ml-1">(Bir nechta fanni tanlashingiz mumkin, tanlamasangiz ham bo'ladi):</span>
         </p>
-        <p class="text-xs text-gray-400 mt-1">— ${wish.author}</p>
-      </div>
-
-      <!-- Chuqur professional tabrik matni -->
-      <p class="text-gray-200 text-base sm:text-lg leading-relaxed text-justify indent-6 my-6 font-light">
-        ${wish.text}
-      </p>
-
-      <!-- Muhr va imzo -->
-      <div class="flex items-center justify-between pt-4 border-t border-yellow-500/30">
-        <div class="text-left">
-          <p class="text-xs text-yellow-400 font-bold uppercase tracking-wider">Shogirdlik Ehtiromi</p>
-          <p class="text-xs sm:text-sm text-gray-300 italic">${wish.signature}</p>
-        </div>
-        <div class="gold-seal text-xs font-black text-black text-center uppercase tracking-tighter">
-          1-OKT<br>BAYRAM
+        <div id="modal-subjects-chips" class="flex flex-wrap gap-2 justify-center max-w-xl mx-auto">
+          ${SUBJECTS_CONFIG.map(subj => `
+            <button type="button" onclick="toggleSubjectSelection('${subj.id}')" id="chip-${subj.id}" class="subject-chip ${selectedSubjects.has(subj.id) ? 'selected' : ''}">
+              <span>${subj.icon}</span>
+              <span>${subj.name}</span>
+            </button>
+          `).join('')}
         </div>
       </div>
 
-      <!-- Tugmalar: "Yana bitta tilak o'qish" va "Boshqa fanni tanlash" -->
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center items-center">
-        <button onclick="showWishModal()" class="w-full sm:w-auto px-8 py-4 rounded-full gold-gradient-bg text-black font-extrabold text-base shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 glow-btn cursor-pointer">
-          <span>✨ Yana bitta tilak o'qish (Ustiga bosing) ✨</span>
-        </button>
-        <button onclick="closeWishModal()" class="w-full sm:w-auto px-6 py-4 rounded-full bg-white/10 hover:bg-white/20 text-yellow-300 border border-yellow-500/40 font-semibold text-sm transition-all hover:scale-105 active:scale-95 cursor-pointer">
-          🔄 Boshqa fanni tanlash
+      <!-- JONLI TILAK BLOKI (DINAMIK) -->
+      <div id="modal-wish-display">
+        <!-- renderCurrentWishHtml() orqali to'ldiriladi -->
+      </div>
+
+      <!-- YANA BITTA TILAK O'QISH TUGMASI -->
+      <div class="mt-8 flex justify-center">
+        <button onclick="refreshWishForSelectedSubjects()" class="glow-btn px-8 sm:px-10 py-4 rounded-full gold-gradient-bg text-black font-black text-base shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span class="text-xl">✨</span>
+          <span>Yana bitta tilak o'qish (Ustiga bosing)</span>
+          <span class="text-xl">✨</span>
         </button>
       </div>
+
     </div>
   `;
+
+  // Dastlabki tilakni render qilamiz
+  renderCurrentWishHtml();
 
   modal.classList.remove('hidden');
   modal.classList.add('flex');
   document.body.style.overflow = 'hidden';
+
+  launchGrandFireworks();
+}
+
+// Fanni tanlash / olib tashlash (Multi-select toggle)
+function toggleSubjectSelection(subjectId) {
+  if (selectedSubjects.has(subjectId)) {
+    selectedSubjects.delete(subjectId);
+  } else {
+    selectedSubjects.add(subjectId);
+  }
+
+  // Chip klassini yangilash
+  const chipBtn = document.getElementById(`chip-${subjectId}`);
+  if (chipBtn) {
+    if (selectedSubjects.has(subjectId)) {
+      chipBtn.classList.add('selected');
+    } else {
+      chipBtn.classList.remove('selected');
+    }
+  }
+
+  // Tilakni darhol yangilash
+  renderCurrentWishHtml();
+  launchGrandFireworks();
+}
+
+// "Yana bitta tilak o'qish" bosilganda yangi tilak chiqarish
+function refreshWishForSelectedSubjects() {
+  renderCurrentWishHtml();
+  launchGrandFireworks();
+}
+
+// Tanlangan fan(lar)ga mos keluvchi HTML tilak kartasini chizish
+function renderCurrentWishHtml() {
+  const container = document.getElementById('modal-wish-display');
+  if (!container) return;
+
+  const wish = getSelectedSubjectsWish();
+  if (!wish) return;
+
+  // Agar bir nechta fan tanlangan bo'lsa, ularning barchasini ko'rsatamiz
+  let selectedNamesLabel = wish.subjectName;
+  if (selectedSubjects.size > 1) {
+    const names = Array.from(selectedSubjects).map(id => SUBJECTS_CONFIG.find(s => s.id === id)?.name).filter(Boolean);
+    selectedNamesLabel = names.join(" & ");
+  } else if (selectedSubjects.size === 0) {
+    selectedNamesLabel = "Barcha Qadrli Ustozlarimiz Uchun";
+  }
+
+  container.innerHTML = `
+    <!-- Icon & Fan nomi -->
+    <div class="text-center mb-5">
+      <div class="text-5xl mb-2 animate-bounce">${wish.icon}</div>
+      <div class="inline-block px-4 py-1 rounded-full text-xs font-bold text-yellow-300 bg-yellow-500/20 border border-yellow-500/50 mb-2 tracking-wide uppercase">
+        ${selectedNamesLabel}
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black font-serif gold-text px-2">
+        ${wish.title}
+      </h2>
+    </div>
+
+    <!-- Hikmatli iqtibos -->
+    <div class="bg-black/40 p-3 sm:p-4 rounded-xl border border-yellow-500/30 my-4 text-center">
+      <p class="text-yellow-200 italic font-garamond text-base sm:text-lg">
+        "${wish.quote}"
+      </p>
+      <p class="text-xs text-gray-400 mt-1">— ${wish.author}</p>
+    </div>
+
+    <!-- Chuqur va samimiy professional tabrik matni -->
+    <p class="text-gray-200 text-base sm:text-lg leading-relaxed text-justify indent-6 my-6 font-light">
+      ${wish.text}
+    </p>
+
+    <!-- Muhr va imzo -->
+    <div class="flex items-center justify-between pt-4 border-t border-yellow-500/30">
+      <div class="text-left">
+        <p class="text-xs text-yellow-400 font-bold uppercase tracking-wider">Shogirdlik Ehtiromi</p>
+        <p class="text-xs sm:text-sm text-gray-300 italic">${wish.signature}</p>
+      </div>
+      <div class="gold-seal text-xs font-black text-black text-center uppercase tracking-tighter shrink-0">
+        1-OKT<br>BAYRAM
+      </div>
+    </div>
+  `;
 }
 
 function closeWishModal() {
@@ -522,7 +545,47 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// --- 3.1. VISA PAYMENT & SCREENSHOT UPLOAD LOGIC ($29.99) ---
+// --- 5. AUDIO & QO'SHIQ BOSHQARUVI (BITTA TUGMACHA, YOUTUBEDAN BILINMAYDI) ---
+function startBackgroundMusic() {
+  const iframe = document.getElementById('yt-iframe');
+  if (iframe && iframe.contentWindow) {
+    try {
+      iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      isAudioPlaying = true;
+      updateMusicButtonUi();
+    } catch(e) {}
+  }
+}
+
+function toggleAudioPlayback() {
+  const iframe = document.getElementById('yt-iframe');
+  if (!iframe || !iframe.contentWindow) return;
+
+  if (isAudioPlaying) {
+    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    isAudioPlaying = false;
+  } else {
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    isAudioPlaying = true;
+  }
+  updateMusicButtonUi();
+}
+
+function updateMusicButtonUi() {
+  const btn = document.getElementById('music-single-btn');
+  const icon = document.getElementById('music-btn-icon');
+  if (!btn || !icon) return;
+
+  if (isAudioPlaying) {
+    icon.innerText = '⏸';
+    btn.classList.add('playing');
+  } else {
+    icon.innerText = '▶';
+    btn.classList.remove('playing');
+  }
+}
+
+// --- 6. VISA PAYMENT & SCREENSHOT UPLOAD ($29.99) ---
 function openPaymentModal() {
   const modal = document.getElementById('payment-modal');
   const form = document.getElementById('visa-payment-form');
@@ -549,7 +612,6 @@ function closePaymentModal() {
   document.body.style.overflow = 'auto';
 }
 
-// Karta ma'lumotlarini jonli formatlash va prevyuda ko'rsatish
 function initCreditCardLiveInput() {
   const numInput = document.getElementById('pay-card-number');
   const expInput = document.getElementById('pay-card-expiry');
@@ -562,33 +624,29 @@ function initCreditCardLiveInput() {
   if (!numInput || numInput.dataset.listenerAdded) return;
   numInput.dataset.listenerAdded = 'true';
 
-  // Karta raqami: 16 ta raqam, har 4 tasida bo'shliq
   numInput.addEventListener('input', (e) => {
     let val = e.target.value.replace(/\D/g, '').substring(0, 16);
     let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
     e.target.value = formatted;
-    prevNum.innerText = formatted || '•••• •••• •••• ••••';
+    if (prevNum) prevNum.innerText = formatted || '•••• •••• •••• ••••';
   });
 
-  // Muddat: MM/YY
   expInput.addEventListener('input', (e) => {
     let val = e.target.value.replace(/\D/g, '').substring(0, 4);
     if (val.length >= 3) {
       val = val.substring(0, 2) + '/' + val.substring(2, 4);
     }
     e.target.value = val;
-    prevExp.innerText = val || 'MM/YY';
+    if (prevExp) prevExp.innerText = val || 'MM/YY';
   });
 
-  // Karta egasi
   holderInput.addEventListener('input', (e) => {
     let val = e.target.value.toUpperCase();
     e.target.value = val;
-    prevHolder.innerText = val || 'ISMI SHARIFI';
+    if (prevHolder) prevHolder.innerText = val || 'ISMI SHARIFI';
   });
 }
 
-// Skrinshot yuklanganda rasm prevyusini ko'rsatish
 function handleScreenshotUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -610,7 +668,6 @@ function handleScreenshotUpload(event) {
   reader.readAsDataURL(file);
 }
 
-// To'lovni tasdiqlash
 function submitVisaPayment(event) {
   event.preventDefault();
 
@@ -638,48 +695,10 @@ function submitVisaPayment(event) {
   }, 1200);
 }
 
-// --- 4. YOUTUBE MUSIC CONTROLS ---
-function toggleYouTubeMusic() {
-  const iframe = document.getElementById('yt-iframe');
-  const btnText = document.getElementById('music-btn-text');
-  const btnIcon = document.getElementById('music-btn-icon');
-
-  if (!iframe || !iframe.contentWindow) return;
-
-  if (isMusicPlaying) {
-    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-    isMusicPlaying = false;
-    btnText.innerText = "Qo'shiqni Yoqish";
-    btnIcon.innerText = "▶️";
-  } else {
-    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-    isMusicPlaying = true;
-    btnText.innerText = "To'xtatish";
-    btnIcon.innerText = "⏸️";
-  }
-}
-
-function togglePlayerMinimize() {
-  const wrapper = document.getElementById('player-wrapper');
-  const icon = document.getElementById('player-min-icon');
-
-  if (!wrapper) return;
-
-  if (isPlayerMinimized) {
-    wrapper.style.display = 'block';
-    icon.innerText = '➖';
-    isPlayerMinimized = false;
-  } else {
-    wrapper.style.display = 'none';
-    icon.innerText = '➕';
-    isPlayerMinimized = true;
-  }
-}
-
-// --- 5. FIREWORKS & CONFETTI ---
+// --- 7. FIREWORKS & CONFETTI ---
 function initClickFireworks() {
   window.addEventListener('click', (e) => {
-    if (!e.target.closest('button, a, .modal-close-btn, iframe')) {
+    if (!e.target.closest('button, a, .modal-close-btn, iframe, input')) {
       if (typeof confetti !== 'undefined') {
         confetti({
           particleCount: 25,
@@ -721,7 +740,7 @@ function launchGrandFireworks() {
   }, 250);
 }
 
-// --- 6. THREE.JS 3D PARTICLE GALAXY & SCENE ---
+// --- 8. THREE.JS 3D PARTICLE GALAXY & SCENE ---
 let scene, camera, renderer, particles, bookMesh;
 let mouseX = 0, mouseY = 0;
 let targetX = 0, targetY = 0;

@@ -147,59 +147,65 @@ body {
   box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
 }
 
-/* Music Floating Button */
-.music-toggle {
+/* Single Circular Floating Music Button */
+.music-toggle-btn {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 99;
-  width: 56px;
-  height: 56px;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ffd700, #b8860b);
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #0b0f19;
-  font-size: 24px;
+  font-size: 22px;
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.music-toggle:hover {
-  transform: scale(1.1) rotate(10deg);
+.music-toggle-btn:hover {
+  transform: scale(1.12);
   box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6);
 }
 
-.music-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 20px;
+.music-toggle-btn.playing {
+  animation: pulseGlow 2.5s infinite alternate;
 }
 
-.music-bar {
-  width: 4px;
-  background: #0b0f19;
-  border-radius: 2px;
-  animation: soundBar 1.2s infinite ease-in-out;
+/* Subject Chips (Multi-select inside modal) */
+.subject-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.music-bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
-.music-bar:nth-child(2) { height: 18px; animation-delay: 0.3s; }
-.music-bar:nth-child(3) { height: 12px; animation-delay: 0.2s; }
-.music-bar:nth-child(4) { height: 16px; animation-delay: 0.4s; }
-
-.music-muted .music-bar {
-  animation: none !important;
-  height: 4px !important;
+.subject-chip:hover {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.5);
+  color: #ffd700;
 }
 
-@keyframes soundBar {
-  0%, 100% { height: 6px; }
-  50% { height: 20px; }
+.subject-chip.selected {
+  background: linear-gradient(135deg, #ffd700, #d4af37);
+  border-color: #ffffff;
+  color: #060913;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  transform: scale(1.05);
 }
 
 /* Subject Choice Cards */

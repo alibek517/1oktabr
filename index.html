@@ -24,39 +24,21 @@
   <!-- 3D Three.js Background Canvas -->
   <canvas id="webgl-canvas"></canvas>
 
-  <!-- FLOATING MUSIC PLAYER BAR -->
-  <div class="fixed top-4 right-4 z-50 flex items-center gap-3 bg-black/70 backdrop-blur-md border border-yellow-500/40 px-4 py-2 rounded-full shadow-2xl">
-    <div class="flex items-center gap-2">
-      <span class="text-xl animate-bounce">🎵</span>
-      <span class="text-xs font-bold text-yellow-300 hidden sm:inline tracking-wider uppercase">Ustozlar Qo'shig'i</span>
-    </div>
-    <button id="main-music-btn" onclick="toggleYouTubeMusic()" class="px-3 py-1 rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs transition-all active:scale-95 flex items-center gap-1">
-      <span id="music-btn-icon">▶️</span>
-      <span id="music-btn-text">Qo'shiqni Yoqish</span>
-    </button>
-  </div>
+  <!-- SINGLE FLOATING MUSIC PLAY/PAUSE BUTTON (NO TEXT, PURE ICON) -->
+  <button id="music-single-btn" onclick="toggleAudioPlayback()" class="music-toggle-btn playing" title="Musiqani yoqish/to'xtatish">
+    <span id="music-btn-icon">⏸</span>
+  </button>
 
-  <!-- YOUTUBE IFRAME (Background audio / player) -->
-  <div id="youtube-player-container" class="fixed bottom-4 left-4 z-40 bg-black/80 backdrop-blur-md p-2 rounded-2xl border border-yellow-500/30 shadow-2xl transition-all duration-300">
-    <div class="flex items-center justify-between gap-3 px-2 pb-1">
-      <span class="text-[11px] font-bold text-yellow-300 uppercase tracking-widest flex items-center gap-1">
-        <span>🎬</span> 1-Oktyabr Taronasi
-      </span>
-      <button onclick="togglePlayerMinimize()" class="text-xs text-gray-400 hover:text-white px-1">
-        <span id="player-min-icon">➖</span>
-      </button>
-    </div>
-    <div id="player-wrapper" class="w-64 h-36 rounded-xl overflow-hidden mt-1">
-      <!-- 1-oktyabr Ustozlar bayrami uchun eng mashhur video -->
-      <iframe id="yt-iframe" class="w-full h-full" src="https://www.youtube.com/embed/nPDAOxT50q4?enablejsapi=1&autoplay=1&loop=1&playlist=nPDAOxT50q4" title="1-Oktyabr Ustozlar Qo'shig'i" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+  <!-- INVISIBLE YOUTUBE AUDIO (YouTube ekanligi bilinmaydi) -->
+  <div class="fixed -left-[9999px] -top-[9999px] w-1 h-1 opacity-0 pointer-events-none overflow-hidden">
+    <iframe id="yt-iframe" class="w-1 h-1" src="https://www.youtube.com/embed/nPDAOxT50q4?enablejsapi=1&autoplay=1&loop=1&playlist=nPDAOxT50q4" allow="autoplay"></iframe>
   </div>
 
   <!-- MAIN CONTENT -->
   <div class="content-wrapper">
 
     <!-- HERO SECTION -->
-    <header class="relative pt-12 pb-8 px-4 text-center">
+    <header class="relative min-h-[70vh] flex flex-col justify-center items-center pt-16 pb-12 px-4 text-center">
       
       <!-- Top Ribbon -->
       <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 backdrop-blur-md mb-6 animate-pulse shadow-lg">
@@ -68,13 +50,13 @@
       </div>
 
       <!-- Main Heading -->
-      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-serif tracking-tight leading-none mb-4">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-serif tracking-tight leading-none mb-6">
         <span class="block text-white drop-shadow-lg">BAYRAMINGIZ MUBORAK,</span>
         <span class="gold-text">AZIZ USTOZLAR!</span>
       </h1>
 
       <!-- Quote -->
-      <p class="max-w-3xl mx-auto text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-6 px-2">
+      <p class="max-w-3xl mx-auto text-gray-300 text-base sm:text-xl font-garamond italic leading-relaxed mb-10 px-2">
         «Haq yo'linda kim senga bir harf o'rgatmish ranj ila,<br class="hidden sm:inline">
         Aylamak bo'lmas ado oning haqin yuz ganj ila.»
         <span class="block text-yellow-400 font-sans text-xs tracking-wider uppercase mt-2 not-italic font-bold">
@@ -83,40 +65,16 @@
       </p>
 
       <!-- Center Action Button: "Ustiga bosing" -->
-      <div class="flex flex-col items-center justify-center my-6">
-        <button onclick="handleGeneralClick()" class="glow-btn px-10 py-5 rounded-full gold-gradient-bg text-black font-black text-xl sm:text-2xl flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
-          <span class="text-3xl animate-bounce">🎁</span>
+      <div class="flex flex-col items-center justify-center my-4">
+        <button onclick="openWishModalWithSubjects()" class="glow-btn px-10 sm:px-14 py-5 sm:py-6 rounded-full gold-gradient-bg text-black font-black text-xl sm:text-2xl flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
+          <span class="text-3xl sm:text-4xl animate-bounce">🎁</span>
           <span>Ustiga bosing</span>
         </button>
-        <span class="text-xs text-yellow-300 font-semibold tracking-widest uppercase mt-3">
-          (Umumiy bayramona kutilmagan tilakni ochish)
+        <span class="text-xs text-yellow-300 font-semibold tracking-widest uppercase mt-4">
+          (Bayram qutlovini qabul qilish uchun)
         </span>
       </div>
     </header>
-
-
-    <!-- MAIN SECTION: MUHTARAM USTOZ, QAYSI FANDAN DARS BERASIZ? -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-      
-      <!-- Big Direct Header -->
-      <div class="text-center mb-10 bg-gradient-to-r from-yellow-500/10 via-yellow-500/20 to-yellow-500/10 border-y border-yellow-500/30 py-8 rounded-3xl backdrop-blur-md">
-        <div class="inline-block px-4 py-1 rounded-full bg-yellow-500 text-black text-xs font-black uppercase tracking-wider mb-3">
-          🎓 Savol
-        </div>
-        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white tracking-tight">
-          Muhtaram Ustoz, <span class="gold-text">qaysi fandan dars berasiz?</span>
-        </h2>
-        <p class="text-gray-300 text-sm sm:text-base mt-3 max-w-2xl mx-auto font-light">
-          O'zingiz saboq beradigan fanni tanlang. Har bir fan uchun <span class="text-yellow-400 font-bold">kamida 100 ta</span> mukammal va professional tilak tayyorlangan:
-        </p>
-      </div>
-
-      <!-- Subject Cards Grid (11 Subjects) -->
-      <div id="subject-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <!-- Javascript orqali dinamik to'ldiriladi -->
-      </div>
-    </main>
-
 
     <!-- VIP SECTION: MAXSUS ATALGAN TABRIK ($29.99) -->
     <section class="max-w-5xl mx-auto px-4 py-12">
